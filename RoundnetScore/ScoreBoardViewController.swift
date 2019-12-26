@@ -11,14 +11,16 @@ import UIKit
 class ScoreBoardViewController: UIViewController {
 
 //    MARK: Outlets
-    @IBOutlet weak var homeAdd: UIButton!
-    @IBOutlet weak var homeRemove: UIButton!
-    @IBOutlet weak var homeScore: UILabel!
+    @IBOutlet weak var homeAddLbl: UIButton!
+    @IBOutlet weak var homeRemoveLbl: UIButton!
+    @IBOutlet weak var homeScoreLbl: UILabel!
 
-    @IBOutlet weak var awayAdd: UIButton!
-    @IBOutlet weak var awayRemove: UIButton!
-    @IBOutlet weak var awayScore: UILabel!
+    @IBOutlet weak var awayAddLbl: UIButton!
+    @IBOutlet weak var awayRemoveLbl: UIButton!
+    @IBOutlet weak var awayScoreLbl: UILabel!
 
+    private var homeScore: Int = 0
+    private var awayScore: Int = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,5 +41,7 @@ class ScoreBoardViewController: UIViewController {
     @IBAction func awayDidRemove(_ sender: UIButton) {
     }
 
+    @IBAction func didPressRestart(_ sender: UIBarButtonItem) {
+    }
 }
 
