@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		F8F1A4B423B5341200E28F91 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F1A4B323B5341200E28F91 /* AppDelegate.swift */; };
 		F8F1A4B623B5341200E28F91 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F1A4B523B5341200E28F91 /* SceneDelegate.swift */; };
-		F8F1A4B823B5341200E28F91 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F1A4B723B5341200E28F91 /* ViewController.swift */; };
+		F8F1A4B823B5341200E28F91 /* ScoreBoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F1A4B723B5341200E28F91 /* ScoreBoardViewController.swift */; };
 		F8F1A4BB23B5341200E28F91 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8F1A4B923B5341200E28F91 /* Main.storyboard */; };
 		F8F1A4BE23B5341200E28F91 /* RoundnetScore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F8F1A4BC23B5341200E28F91 /* RoundnetScore.xcdatamodeld */; };
 		F8F1A4C023B5341400E28F91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8F1A4BF23B5341400E28F91 /* Assets.xcassets */; };
@@ -31,7 +31,7 @@
 		F8F1A4B023B5341200E28F91 /* RoundnetScore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoundnetScore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8F1A4B323B5341200E28F91 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F8F1A4B523B5341200E28F91 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		F8F1A4B723B5341200E28F91 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F8F1A4B723B5341200E28F91 /* ScoreBoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreBoardViewController.swift; sourceTree = "<group>"; };
 		F8F1A4BA23B5341200E28F91 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F8F1A4BD23B5341200E28F91 /* RoundnetScore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RoundnetScore.xcdatamodel; sourceTree = "<group>"; };
 		F8F1A4BF23B5341400E28F91 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -83,7 +83,7 @@
 			children = (
 				F8F1A4B323B5341200E28F91 /* AppDelegate.swift */,
 				F8F1A4B523B5341200E28F91 /* SceneDelegate.swift */,
-				F8F1A4B723B5341200E28F91 /* ViewController.swift */,
+				F8F1A4B723B5341200E28F91 /* ScoreBoardViewController.swift */,
 				F8F1A4B923B5341200E28F91 /* Main.storyboard */,
 				F8F1A4BF23B5341400E28F91 /* Assets.xcassets */,
 				F8F1A4C123B5341400E28F91 /* LaunchScreen.storyboard */,
@@ -203,7 +203,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F8F1A4B823B5341200E28F91 /* ViewController.swift in Sources */,
+				F8F1A4B823B5341200E28F91 /* ScoreBoardViewController.swift in Sources */,
 				F8F1A4BE23B5341200E28F91 /* RoundnetScore.xcdatamodeld in Sources */,
 				F8F1A4B423B5341200E28F91 /* AppDelegate.swift in Sources */,
 				F8F1A4B623B5341200E28F91 /* SceneDelegate.swift in Sources */,
