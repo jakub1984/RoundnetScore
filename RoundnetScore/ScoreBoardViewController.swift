@@ -18,18 +18,37 @@ class ScoreBoardViewController: UIViewController {
     @IBOutlet weak var awayAddLbl: UIButton!
     @IBOutlet weak var awayRemoveLbl: UIButton!
     @IBOutlet weak var awayScoreLbl: UILabel!
+    @IBOutlet weak var gameSettingsLbl: UILabel!
 
     private var homeScore: Int = 0
     private var awayScore: Int = 0
+    var maxScore: Int = 1
+
+    var maxSets: Int = 1
+    private var currentSet: Int = 1
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+
+        self.homeScoreLbl.text = getScore(team: homeScore)
+        self.awayScoreLbl.text = getScore(team: awayScore)
+        self.gameSettingsLbl.text = getSettingsLabel()
+
+    }
+
+    func getScore(team: Int) -> String {
+        return "\(team)"
+    }
+
+    func getSettingsLabel() -> String {
+        return "Set \(currentSet) of \(maxSets) | \(maxScore) points win"
     }
 
 
 //    MARK: Scoring Actions
     @IBAction func homeDidAdd(_ sender: UIButton) {
+
     }
 
     @IBAction func homeDidRemove(_ sender: UIButton) {
@@ -42,6 +61,9 @@ class ScoreBoardViewController: UIViewController {
     }
 
     @IBAction func didPressRestart(_ sender: UIBarButtonItem) {
+    }
+
+    @IBAction func didPressEdit(_ sender: UIBarButtonItem) {
     }
 }
 
