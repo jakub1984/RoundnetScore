@@ -95,7 +95,7 @@ extension GameViewController {
     }
 
     func getSetsLabel(team: Int) -> String {
-        let label = maxSets == 1 ? "" : "Sets: \(team)"
+        let label = maxSets == 1 ? "" : "Wins: \(team)"
         return label
     }
 }
