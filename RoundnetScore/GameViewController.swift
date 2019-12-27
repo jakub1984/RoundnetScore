@@ -16,6 +16,7 @@ class GameViewController: UIViewController {
     @IBOutlet weak var setsConfiguartionLbl: UILabel!
     @IBOutlet weak var homeSetsLbl: UILabel!
     @IBOutlet weak var awaySetsLbl: UILabel!
+    @IBOutlet weak var serveIndicatorView: UIImageView!
 
     private var homeScore: Int = 0
     private var homeSets: Int = 0
@@ -23,14 +24,36 @@ class GameViewController: UIViewController {
     private var awayScore: Int = 0
     private var awaySets: Int = 0
 
+    var serveHistory: [Int] = []
+
     var maxScore: Int = 15
     var maxSets: Int = 3
+    var startingTeam: Int = 0
     private var currentSet: Int = 1
 
     override func viewDidLoad() {
         super.viewDidLoad()
         newGame()
+    }
 
+    private func calculateServe() {
+        if serveHistory.count < 2 {
+            print("Zahajujeme")
+        } else {
+            let previousServe = serveHistory[serveHistory.count - 2]
+
+            print("previousServe \(previousServe)")
+
+            if previousServe == 0 {
+//                TODO: Verify that properly saves starting team
+                startingTeam = serveHistory.last ?? 0
+                print("zahajuje tym \(serveHistory.last)")
+            } else if serveHistory.last == previousServe {
+                print("Podání zůstává u \(serveHistory.last)")
+            } else {
+                print("serving team (\(serveHistory.last)")
+            }
+        }
     }
 
     private func newGame() {
@@ -39,6 +62,7 @@ class GameViewController: UIViewController {
         self.currentSet = 1
         self.homeSets = 0
         self.awaySets = 0
+        self.serveHistory = [0]
 
         self.homeScoreLbl.text = getScore(team: homeScore)
         self.awayScoreLbl.text = getScore(team: awayScore)
@@ -62,31 +86,42 @@ class GameViewController: UIViewController {
         }
     }
 
+    private func removeServe() {
+        if serveHistory.count > 1 {
+            serveHistory.removeLast()
+        }
+        calculateServe()
+    }
+
     //    MARK: Scoring Actions
     @IBAction func homeDidScore(_ sender: UIButton) {
         homeScore += 1
         homeScoreLbl.text = getScore(team: homeScore)
-        calculateScore()
+        serveHistory.append(1)
+        calculateServe()
     }
 
     @IBAction func awayDidScore(_ sender: UIButton) {
         awayScore += 1
         awayScoreLbl.text = getScore(team: awayScore)
-        calculateScore()
+        serveHistory.append(2)
+        calculateServe()
     }
 
     @IBAction func homeDidRemove(_ sender: UIButton) {
-        if homeScore > 0 {
-            homeScore -= 1
-            homeScoreLbl.text = getScore(team: homeScore)
-        }
+        guard homeScore > 0 else { return }
+
+        homeScore -= 1
+        homeScoreLbl.text = getScore(team: homeScore)
+        removeServe()
     }
 
     @IBAction func awayDidRemove(_ sender: UIButton) {
-        if awayScore > 0 {
-            awayScore -= 1
-            awayScoreLbl.text = getScore(team: awayScore)
-        }
+        guard awayScore > 0 else { return }
+
+        awayScore -= 1
+        awayScoreLbl.text = getScore(team: awayScore)
+        removeServe()
     }
 
     @IBAction func didPressRestart(_ sender: UIBarButtonItem) {

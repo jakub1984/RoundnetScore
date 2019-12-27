@@ -210,6 +210,7 @@
                         <outlet property="awaySetsLbl" destination="yTY-WQ-r5z" id="TOY-fq-9GO"/>
                         <outlet property="homeScoreLbl" destination="Pqp-ME-Nn4" id="7Ob-Qw-Be2"/>
                         <outlet property="homeSetsLbl" destination="fhD-pd-QPw" id="9fU-un-59Q"/>
+                        <outlet property="serveIndicatorView" destination="HOZ-UJ-BvO" id="bw7-dm-LJY"/>
                         <outlet property="setsConfiguartionLbl" destination="JoR-2U-4WL" id="2EN-Qa-ej2"/>
                         <segue destination="Pt8-Y0-q2H" kind="show" identifier="toResult" id="M8k-O4-vmt"/>
                     </connections>
