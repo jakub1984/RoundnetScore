@@ -16,7 +16,13 @@ class GameViewController: UIViewController {
     @IBOutlet weak var setsConfiguartionLbl: UILabel!
     @IBOutlet weak var homeSetsLbl: UILabel!
     @IBOutlet weak var awaySetsLbl: UILabel!
+
+    @IBOutlet weak var settingsView: UIView!
     @IBOutlet weak var serveIndicatorView: UIImageView!
+    @IBOutlet weak var serverHomeAView: UIView!
+    @IBOutlet weak var serverHomeBView: UIView!
+    @IBOutlet weak var serverAwayAView: UIView!
+    @IBOutlet weak var serverAwayBView: UIView!
 
     private var homeScore: Int = 0
     private var homeSets: Int = 0
@@ -29,6 +35,7 @@ class GameViewController: UIViewController {
     var maxScore: Int = 15
     var maxSets: Int = 3
     var startingTeam: Int = 0
+
     private var currentSet: Int = 1
 
     override func viewDidLoad() {
@@ -39,6 +46,8 @@ class GameViewController: UIViewController {
     private func calculateServe() {
         if serveHistory.count < 2 {
             print("Zahajujeme")
+            serveIndicatorView.center.y = settingsView.center.y
+            serveIndicatorView.isHidden = true
         } else {
             let previousServe = serveHistory[serveHistory.count - 2]
 
@@ -47,12 +56,17 @@ class GameViewController: UIViewController {
             if previousServe == 0 {
 //                TODO: Verify that properly saves starting team
                 startingTeam = serveHistory.last ?? 0
+                self.setStartingServePosition()
                 print("zahajuje tym \(serveHistory.last)")
-            } else if serveHistory.last == previousServe {
+            } else if serveHistory.last != previousServe {
+                UIView.animate(withDuration: 0.5) {
+                    self.setServingTeam()
+                }
                 print("Podání zůstává u \(serveHistory.last)")
             } else {
                 print("serving team (\(serveHistory.last)")
             }
+            serveIndicatorView.isHidden = false
         }
     }
 
@@ -69,6 +83,30 @@ class GameViewController: UIViewController {
         self.homeSetsLbl.text = getSetsLabel(team: homeSets)
         self.awaySetsLbl.text = getSetsLabel(team: awaySets)
         self.setsConfiguartionLbl.text = getSettingsLabel()
+        serveIndicatorView.center.y = settingsView.center.y
+        self.serveIndicatorView.isHidden = true
+    }
+
+    private func setStartingServer() {
+
+    }
+
+
+
+    private func setStartingServePosition() {
+        if serveHistory.last == 1 {
+            serveIndicatorView.center.y -= 75
+        } else if serveHistory.last == 2 {
+            serveIndicatorView.center.y += 75
+        }
+    }
+
+    private func setServingTeam() {
+        if serveHistory.last == 1 {
+            serveIndicatorView.center.y = settingsView.center.y - 75
+        } else if serveHistory.last == 2 {
+            serveIndicatorView.center.y = settingsView.center.y + 75
+        }
     }
 
     private func getSettingsLabel() -> String {
@@ -131,6 +169,8 @@ class GameViewController: UIViewController {
     @IBAction func didPressEdit(_ sender: UIBarButtonItem) {
     }
 }
+
+// MARK: Extensions
 
 extension GameViewController {
     func getScore(team: Int) -> String {
