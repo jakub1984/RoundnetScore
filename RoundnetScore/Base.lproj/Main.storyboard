@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vG6-pu-p4N">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
@@ -10,7 +10,7 @@
         <!--Spikeball Score-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ScoreBoardViewController" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="GameViewController" customModule="RoundnetScore" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -26,7 +26,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <action selector="homeDidRemove:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZsH-hA-MEt"/>
+                                            <action selector="homeDidRemove:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HUc-GP-ZoT"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="abl-tt-rk0">
@@ -37,11 +37,11 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <action selector="homeDidAdd:" destination="BYZ-38-t0r" eventType="touchUpInside" id="S7N-7Q-zlU"/>
+                                            <action selector="homeDidScore:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9xq-MM-GzE"/>
                                         </connections>
                                     </button>
-                                    <stackView opaque="NO" contentMode="top" layoutMarginsFollowReadableWidth="YES" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8tu-0d-6kF">
-                                        <rect key="frame" x="118.33333333333333" y="53.000000000000014" width="138.33333333333337" height="206.33333333333337"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" layoutMarginsFollowReadableWidth="YES" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8tu-0d-6kF">
+                                        <rect key="frame" x="118.33333333333333" y="37.000000000000014" width="138.33333333333337" height="238.33333333333337"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HOME" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="eXa-Mg-Ojd">
                                                 <rect key="frame" x="0.0" y="0.0" width="138.33333333333334" height="55"/>
@@ -52,6 +52,12 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="17" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Pqp-ME-Nn4">
                                                 <rect key="frame" x="0.0" y="63.000000000000014" width="138.33333333333334" height="143.33333333333337"/>
                                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="120"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sets: 0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fhD-pd-QPw">
+                                                <rect key="frame" x="0.0" y="214.33333333333331" width="138.33333333333334" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -83,10 +89,10 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <action selector="awayDidRemove:" destination="BYZ-38-t0r" eventType="touchUpInside" id="yEi-de-MCA"/>
+                                            <action selector="awayDidRemove:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Zo0-Fx-4zc"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bo0-Qk-q8c">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bo0-Qk-q8c" userLabel="awayPlusLbl">
                                         <rect key="frame" x="0.0" y="0.0" width="100.33333333333333" height="312"/>
                                         <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
@@ -94,21 +100,27 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <action selector="awayDidAdd:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pC2-QA-ndR"/>
+                                            <action selector="awayDidScore:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3kt-Ku-76K"/>
                                         </connections>
                                     </button>
-                                    <stackView opaque="NO" contentMode="top" layoutMarginsFollowReadableWidth="YES" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="iF2-CN-WMZ">
-                                        <rect key="frame" x="120.33333333333333" y="53.000000000000014" width="134.66666666666669" height="206.33333333333337"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" layoutMarginsFollowReadableWidth="YES" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="iF2-CN-WMZ">
+                                        <rect key="frame" x="120.33333333333333" y="37.000000000000014" width="134.66666666666669" height="238.33333333333337"/>
                                         <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AWAY" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="b38-mo-C8o">
+                                                <rect key="frame" x="0.0" y="0.0" width="134.66666666666666" height="55"/>
+                                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="46"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="21" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="mmF-VB-94S">
-                                                <rect key="frame" x="0.0" y="0.0" width="134.66666666666666" height="143.33333333333334"/>
+                                                <rect key="frame" x="0.0" y="63.000000000000014" width="134.66666666666666" height="143.33333333333337"/>
                                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="120"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AWAY" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="b38-mo-C8o">
-                                                <rect key="frame" x="0.0" y="151.33333333333337" width="134.66666666666666" height="55"/>
-                                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="46"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sets: 0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yTY-WQ-r5z">
+                                                <rect key="frame" x="0.0" y="214.33333333333337" width="134.66666666666666" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -169,24 +181,22 @@
                     <navigationItem key="navigationItem" title="Spikeball Score" id="vZ0-v2-y3k">
                         <barButtonItem key="leftBarButtonItem" systemItem="edit" id="wys-Jm-zBc">
                             <connections>
-                                <action selector="didPressEdit:" destination="BYZ-38-t0r" id="oWv-zb-Zw3"/>
+                                <action selector="didPressEdit:" destination="BYZ-38-t0r" id="lgh-Jf-qFc"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="h5V-Xg-Nj5">
                             <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
                             <connections>
-                                <action selector="didPressRestart:" destination="BYZ-38-t0r" id="eUQ-5Z-LZp"/>
+                                <action selector="didPressRestart:" destination="BYZ-38-t0r" id="D9s-gM-e7F"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="awayAddLbl" destination="Bo0-Qk-q8c" id="oVy-vT-mTc"/>
-                        <outlet property="awayRemoveLbl" destination="uEh-6o-axF" id="XI2-2w-HYX"/>
-                        <outlet property="awayScoreLbl" destination="mmF-VB-94S" id="kqu-Mc-5ww"/>
-                        <outlet property="gameSettingsLbl" destination="JoR-2U-4WL" id="F1c-Td-dGc"/>
-                        <outlet property="homeAddLbl" destination="abl-tt-rk0" id="sfk-h5-qBb"/>
-                        <outlet property="homeRemoveLbl" destination="axh-Qi-9Mz" id="tkQ-HW-f1y"/>
-                        <outlet property="homeScoreLbl" destination="Pqp-ME-Nn4" id="qwl-DN-LD9"/>
+                        <outlet property="awayScoreLbl" destination="mmF-VB-94S" id="USE-cZ-iEd"/>
+                        <outlet property="awaySetsLbl" destination="yTY-WQ-r5z" id="TOY-fq-9GO"/>
+                        <outlet property="homeScoreLbl" destination="Pqp-ME-Nn4" id="7Ob-Qw-Be2"/>
+                        <outlet property="homeSetsLbl" destination="fhD-pd-QPw" id="9fU-un-59Q"/>
+                        <outlet property="setsConfiguartionLbl" destination="JoR-2U-4WL" id="2EN-Qa-ej2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -209,7 +219,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aWg-Sn-wfh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1047.8260869565217" y="126.5625"/>
+            <point key="canvasLocation" x="1041" y="109"/>
         </scene>
     </scenes>
 </document>
