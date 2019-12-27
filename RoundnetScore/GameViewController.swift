@@ -52,19 +52,27 @@ class GameViewController: UIViewController {
         return label
     }
 
-    //    MARK: Scoring Actions
-    @IBAction func homeDidScore(_ sender: UIButton) {
-        if homeScore < maxScore {
-            homeScore += 1
-            homeScoreLbl.text = getScore(team: homeScore)
+    private func calculateScore() {
+        if homeScore > (maxScore - 1), homeScore > (awayScore + 1) {
+            print("home wins")
+        } else if awayScore > (maxScore - 1), awayScore > (homeScore + 1) {
+            print("away wins")
+        } else {
+            print("next point")
         }
     }
 
+    //    MARK: Scoring Actions
+    @IBAction func homeDidScore(_ sender: UIButton) {
+        homeScore += 1
+        homeScoreLbl.text = getScore(team: homeScore)
+        calculateScore()
+    }
+
     @IBAction func awayDidScore(_ sender: UIButton) {
-        if awayScore < maxScore {
-            awayScore += 1
-            awayScoreLbl.text = getScore(team: awayScore)
-        }
+        awayScore += 1
+        awayScoreLbl.text = getScore(team: awayScore)
+        calculateScore()
     }
 
     @IBAction func homeDidRemove(_ sender: UIButton) {
