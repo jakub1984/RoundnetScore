@@ -30,7 +30,10 @@ class GameViewController: UIViewController {
     private var awayScore: Int = 0
     private var awaySets: Int = 0
 
-    var serveHistory: [Int] = []
+    var serveHistory: [Int] = [0]
+
+    private let servers: [Int] = [0,1,2,3,4]
+    var currentServer: Int = 0
 
     var maxScore: Int = 15
     var maxSets: Int = 3
@@ -57,18 +60,21 @@ class GameViewController: UIViewController {
 //                TODO: Verify that properly saves starting team
                 startingTeam = serveHistory.last ?? 0
                 self.setStartingServePosition()
-                print("zahajuje tym \(serveHistory.last)")
+                self.currentServer = 1
+                print("zahajuje tym \(String(describing: serveHistory.last))")
             } else if serveHistory.last != previousServe {
                 UIView.animate(withDuration: 0.5) {
                     self.setServingTeam()
                 }
-                print("Podání zůstává u \(serveHistory.last)")
+                print("Podává \(String(describing: serveHistory.last))")
             } else {
-                print("serving team (\(serveHistory.last)")
+                print("Podání zůstává u \(String(describing: serveHistory.last))")
             }
             serveIndicatorView.isHidden = false
         }
     }
+
+
 
     private func newGame() {
         self.awayScore = 0
@@ -77,6 +83,7 @@ class GameViewController: UIViewController {
         self.homeSets = 0
         self.awaySets = 0
         self.serveHistory = [0]
+        self.currentServer = 0
 
         self.homeScoreLbl.text = getScore(team: homeScore)
         self.awayScoreLbl.text = getScore(team: awayScore)
@@ -86,11 +93,6 @@ class GameViewController: UIViewController {
         serveIndicatorView.center.y = settingsView.center.y
         self.serveIndicatorView.isHidden = true
     }
-
-    private func setStartingServer() {
-
-    }
-
 
 
     private func setStartingServePosition() {
