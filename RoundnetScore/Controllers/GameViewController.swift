@@ -78,20 +78,21 @@ class GameViewController: UIViewController {
     }
 
     private func calculateServe() {
-        if serveHistory.count < 2 {
+        if serveHistory.count <= 1 {
             print("Zahajujeme")
             serveIndicatorView.center.y = settingsView.center.y
             serveIndicatorView.isHidden = true
         } else {
             let previousServe = serveHistory[serveHistory.count - 2]
 
-            print("previousServe \(previousServe)")
 
             if previousServe == 0 {
                 self.setStartingServePosition()
                 self.currentServer = self.players[1]
                 print("zahajuje tym \(String(describing: serveHistory.last))")
             } else if serveHistory.last != previousServe {
+                self.currentServer = self.players[1]
+
                 UIView.animate(withDuration: 0.5) {
                     self.setServingTeam()
                 }
@@ -127,6 +128,7 @@ class GameViewController: UIViewController {
     private func calculateScore() {
         let currentScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer)
         scoreHistory.append(currentScore)
+        print("scoreHistory \(String(describing: scoreHistory.last))")
 
         if homeScore > (maxScore - 1), homeScore > (awayScore + 1) {
             wins(team: .home)
@@ -170,17 +172,16 @@ class GameViewController: UIViewController {
     @IBAction func homeDidScore(_ sender: UIButton) {
         homeScore += 1
         homeScoreLbl.text = getScore(team: homeScore)
-        serveHistory.append(1)
-        calculateScore()
         calculateServe()
+        calculateScore()
     }
 
     @IBAction func awayDidScore(_ sender: UIButton) {
         awayScore += 1
         awayScoreLbl.text = getScore(team: awayScore)
         serveHistory.append(2)
-        calculateScore()
         calculateServe()
+        calculateScore()
     }
 
     @IBAction func homeDidRemove(_ sender: UIButton) {
