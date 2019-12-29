@@ -31,8 +31,16 @@ class GameViewController: UIViewController {
     private var awaySets: Int = 0
 
     var serveHistory: [Int] = [0]
+    var setsHistory: [(Int,Int)] = []
 
-    private let servers: [Int] = [0,1,2,3,4]
+    private let players: [Player] = [
+        Player(team: .noTeam),
+        Player(team: .home, position: .A),
+        Player(team: .away, position: .A),
+        Player(team: .home, position: .B),
+        Player(team: .away, position: .B)
+    ]
+
     var currentServer: Int = 0
 
     var maxScore: Int = 15
@@ -118,13 +126,28 @@ class GameViewController: UIViewController {
 
     private func calculateScore() {
         if homeScore > (maxScore - 1), homeScore > (awayScore + 1) {
-            print("home wins")
+            presentResult(server: .home)
+
+//            let homeWinsController = ResultViewController(winningTeam: .home)
+//            self.navigationController?.pushViewController(homeWinsController, animated: true)
+
+
         } else if awayScore > (maxScore - 1), awayScore > (homeScore + 1) {
+
+            presentResult(server: .away)
             print("away wins")
         } else {
             print("next point")
         }
     }
+
+    func presentResult(server: Team) {
+        let resultViewController = storyboard?.instantiateViewController(withIdentifier: "ResultViewController") as! ResultViewController
+        resultViewController.winner = server
+        resultViewController.modalPresentationStyle = .overCurrentContext
+        present(resultViewController, animated: true, completion: nil)
+    }
+
 
     private func removeServe() {
         if serveHistory.count > 1 {
@@ -138,6 +161,7 @@ class GameViewController: UIViewController {
         homeScore += 1
         homeScoreLbl.text = getScore(team: homeScore)
         serveHistory.append(1)
+        calculateScore()
         calculateServe()
     }
 
@@ -145,6 +169,7 @@ class GameViewController: UIViewController {
         awayScore += 1
         awayScoreLbl.text = getScore(team: awayScore)
         serveHistory.append(2)
+        calculateScore()
         calculateServe()
     }
 
@@ -154,6 +179,7 @@ class GameViewController: UIViewController {
         homeScore -= 1
         homeScoreLbl.text = getScore(team: homeScore)
         removeServe()
+        calculateServe()
     }
 
     @IBAction func awayDidRemove(_ sender: UIButton) {
@@ -162,6 +188,7 @@ class GameViewController: UIViewController {
         awayScore -= 1
         awayScoreLbl.text = getScore(team: awayScore)
         removeServe()
+        calculateServe()
     }
 
     @IBAction func didPressRestart(_ sender: UIBarButtonItem) {
