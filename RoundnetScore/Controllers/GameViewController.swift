@@ -24,15 +24,6 @@ class GameViewController: UIViewController {
     @IBOutlet weak var serverAwayAView: UIView!
     @IBOutlet weak var serverAwayBView: UIView!
 
-    private var homeScore: Int = 0
-    private var homeSets: Int = 0
-
-    private var awayScore: Int = 0
-    private var awaySets: Int = 0
-
-    var serveHistory: [Int] = [0]
-    var setsHistory: [(Int,Int)] = []
-
     private let players: [Player] = [
         Player(team: .noTeam),
         Player(team: .home, position: .A),
@@ -41,17 +32,49 @@ class GameViewController: UIViewController {
         Player(team: .away, position: .B)
     ]
 
-    var currentServer: Int = 0
+    private var homeScore: Int = 0
+    private var homeSets: Int = 0
+
+    private var awayScore: Int = 0
+    private var awaySets: Int = 0
+
+    private var serveHistory: [Int] = [0]
+    private var setsHistory: [Score] = []
+    private var scoreHistory: [Score] = []
+
+    private var currentServer: Player? = nil
 
     var maxScore: Int = 15
     var maxSets: Int = 3
-    var startingTeam: Int = 0
+    var startingTeam: Team = .noTeam
 
     private var currentSet: Int = 1
 
     override func viewDidLoad() {
         super.viewDidLoad()
         newGame()
+    }
+
+//    override func viewWillAppear(_ animated: Bool) {
+//        newGame()
+//    }
+
+    private func newGame() {
+        self.awayScore = 0
+        self.homeScore = 0
+        self.currentSet = 1
+        self.homeSets = 0
+        self.awaySets = 0
+        self.serveHistory = [0]
+        self.currentServer = players[0]
+
+        self.homeScoreLbl.text = getScore(team: homeScore)
+        self.awayScoreLbl.text = getScore(team: awayScore)
+        self.homeSetsLbl.text = getSetsLabel(team: homeSets)
+        self.awaySetsLbl.text = getSetsLabel(team: awaySets)
+        self.setsConfiguartionLbl.text = getSettingsLabel()
+        serveIndicatorView.center.y = settingsView.center.y
+        self.serveIndicatorView.isHidden = true
     }
 
     private func calculateServe() {
@@ -65,10 +88,8 @@ class GameViewController: UIViewController {
             print("previousServe \(previousServe)")
 
             if previousServe == 0 {
-//                TODO: Verify that properly saves starting team
-                startingTeam = serveHistory.last ?? 0
                 self.setStartingServePosition()
-                self.currentServer = 1
+                self.currentServer = self.players[1]
                 print("zahajuje tym \(String(describing: serveHistory.last))")
             } else if serveHistory.last != previousServe {
                 UIView.animate(withDuration: 0.5) {
@@ -81,27 +102,6 @@ class GameViewController: UIViewController {
             serveIndicatorView.isHidden = false
         }
     }
-
-
-
-    private func newGame() {
-        self.awayScore = 0
-        self.homeScore = 0
-        self.currentSet = 1
-        self.homeSets = 0
-        self.awaySets = 0
-        self.serveHistory = [0]
-        self.currentServer = 0
-
-        self.homeScoreLbl.text = getScore(team: homeScore)
-        self.awayScoreLbl.text = getScore(team: awayScore)
-        self.homeSetsLbl.text = getSetsLabel(team: homeSets)
-        self.awaySetsLbl.text = getSetsLabel(team: awaySets)
-        self.setsConfiguartionLbl.text = getSettingsLabel()
-        serveIndicatorView.center.y = settingsView.center.y
-        self.serveIndicatorView.isHidden = true
-    }
-
 
     private func setStartingServePosition() {
         if serveHistory.last == 1 {
@@ -125,27 +125,37 @@ class GameViewController: UIViewController {
     }
 
     private func calculateScore() {
+        let currentScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer)
+        scoreHistory.append(currentScore)
+
         if homeScore > (maxScore - 1), homeScore > (awayScore + 1) {
-            presentResult(server: .home)
-
-//            let homeWinsController = ResultViewController(winningTeam: .home)
-//            self.navigationController?.pushViewController(homeWinsController, animated: true)
-
+            wins(team: .home)
 
         } else if awayScore > (maxScore - 1), awayScore > (homeScore + 1) {
 
-            presentResult(server: .away)
+            wins(team: .away)
             print("away wins")
         } else {
             print("next point")
         }
     }
 
-    func presentResult(server: Team) {
-        let resultViewController = storyboard?.instantiateViewController(withIdentifier: "ResultViewController") as! ResultViewController
-        resultViewController.winner = server
-        resultViewController.modalPresentationStyle = .overCurrentContext
-        present(resultViewController, animated: true, completion: nil)
+    func wins(team: Team) {
+        guard let vc = storyboard?.instantiateViewController(identifier: "ResultViewController", creator: { coder in
+            let vm = self.getResultViewModel()
+            return ResultViewController(coder: coder, result: vm)
+        }) else {
+            fatalError("Failed to load ResultViewController from storyboard.")
+        }
+
+//        vc.modalPresentationStyle = .overCurrentContext
+//        present(vc, animated: true, completion: nil)
+
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func getResultViewModel() -> ResultViewModel {
+        return ResultViewModel(server: currentServer!, scores: scoreHistory)
     }
 
 
@@ -178,6 +188,7 @@ class GameViewController: UIViewController {
 
         homeScore -= 1
         homeScoreLbl.text = getScore(team: homeScore)
+        scoreHistory.removeLast()
         removeServe()
         calculateServe()
     }
@@ -187,6 +198,7 @@ class GameViewController: UIViewController {
 
         awayScore -= 1
         awayScoreLbl.text = getScore(team: awayScore)
+        scoreHistory.removeLast()
         removeServe()
         calculateServe()
     }

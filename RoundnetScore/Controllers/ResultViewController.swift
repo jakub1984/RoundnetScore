@@ -14,9 +14,18 @@ class ResultViewController: UIViewController {
 
     var winner: Team = .noTeam
 
-    convenience init(winningTeam: Team) {
-        self.init()
-        self.winner = winningTeam
+//    convenience init(winningTeam: Team) {
+//        self.init()
+//        self.winner = winningTeam
+//    }
+
+    init?(coder: NSCoder, result: ResultViewModel) {
+        self.winner = result.winningTeam
+        super.init(coder: coder)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
@@ -33,6 +42,7 @@ class ResultViewController: UIViewController {
     }
 
     @IBAction func nextGameBtn(_ sender: UIButton) {
-        dismiss(animated: true, completion: nil)
+//        dismiss(animated: true, completion: nil)
+        navigationController?.popViewController(animated: true)
     }
 }

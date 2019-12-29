@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		F839E94923B696E0005657B3 /* UIView+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F839E94823B696E0005657B3 /* UIView+Animations.swift */; };
 		F839E94C23B75657005657B3 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = F839E94B23B75656005657B3 /* Player.swift */; };
+		F839E94F23B8F5B4005657B3 /* ResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F839E94E23B8F5B3005657B3 /* ResultViewModel.swift */; };
+		F839E95123B8FA3F005657B3 /* Score.swift in Sources */ = {isa = PBXBuildFile; fileRef = F839E95023B8FA3F005657B3 /* Score.swift */; };
 		F85EF98D23B55C2000C41BC5 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85EF98C23B55C2000C41BC5 /* GameViewController.swift */; };
 		F8CB47A523B61C810039AD50 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8CB47A423B61C800039AD50 /* ResultViewController.swift */; };
 		F8F1A4B423B5341200E28F91 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F1A4B323B5341200E28F91 /* AppDelegate.swift */; };
@@ -33,6 +35,8 @@
 /* Begin PBXFileReference section */
 		F839E94823B696E0005657B3 /* UIView+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Animations.swift"; sourceTree = "<group>"; };
 		F839E94B23B75656005657B3 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		F839E94E23B8F5B3005657B3 /* ResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewModel.swift; sourceTree = "<group>"; };
+		F839E95023B8FA3F005657B3 /* Score.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Score.swift; sourceTree = "<group>"; };
 		F85EF98C23B55C2000C41BC5 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		F8CB47A423B61C800039AD50 /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
 		F8F1A4B023B5341200E28F91 /* RoundnetScore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoundnetScore.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,8 +82,26 @@
 			isa = PBXGroup;
 			children = (
 				F839E94B23B75656005657B3 /* Player.swift */,
+				F839E95023B8FA3F005657B3 /* Score.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		F839E94D23B8F592005657B3 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F839E94E23B8F5B3005657B3 /* ResultViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F839E95223B8FA52005657B3 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				F85EF98C23B55C2000C41BC5 /* GameViewController.swift */,
+				F8CB47A423B61C800039AD50 /* ResultViewController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		F8F1A4A723B5341100E28F91 = {
@@ -103,7 +125,9 @@
 		F8F1A4B223B5341200E28F91 /* RoundnetScore */ = {
 			isa = PBXGroup;
 			children = (
+				F839E95223B8FA52005657B3 /* Controllers */,
 				F839E94A23B75632005657B3 /* Models */,
+				F839E94D23B8F592005657B3 /* ViewModels */,
 				F839E94723B696AB005657B3 /* Views */,
 				F8F1A4B323B5341200E28F91 /* AppDelegate.swift */,
 				F8F1A4B523B5341200E28F91 /* SceneDelegate.swift */,
@@ -112,8 +136,6 @@
 				F8F1A4C123B5341400E28F91 /* LaunchScreen.storyboard */,
 				F8F1A4C423B5341400E28F91 /* Info.plist */,
 				F8F1A4BC23B5341200E28F91 /* RoundnetScore.xcdatamodeld */,
-				F85EF98C23B55C2000C41BC5 /* GameViewController.swift */,
-				F8CB47A423B61C800039AD50 /* ResultViewController.swift */,
 			);
 			path = RoundnetScore;
 			sourceTree = "<group>";
@@ -231,9 +253,11 @@
 				F85EF98D23B55C2000C41BC5 /* GameViewController.swift in Sources */,
 				F8F1A4BE23B5341200E28F91 /* RoundnetScore.xcdatamodeld in Sources */,
 				F8F1A4B423B5341200E28F91 /* AppDelegate.swift in Sources */,
+				F839E94F23B8F5B4005657B3 /* ResultViewModel.swift in Sources */,
 				F8F1A4B623B5341200E28F91 /* SceneDelegate.swift in Sources */,
 				F839E94C23B75657005657B3 /* Player.swift in Sources */,
 				F8CB47A523B61C810039AD50 /* ResultViewController.swift in Sources */,
+				F839E95123B8FA3F005657B3 /* Score.swift in Sources */,
 				F839E94923B696E0005657B3 /* UIView+Animations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
