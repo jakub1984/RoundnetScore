@@ -79,9 +79,10 @@ class GameViewController: UIViewController {
         newGame()
     }
 
-//    override func viewWillAppear(_ animated: Bool) {
-//        newGame()
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        newGame()
+
+    }
 
     private func newGame() {
         self.awayScore = 0
@@ -99,6 +100,16 @@ class GameViewController: UIViewController {
         self.setsConfiguartionLbl.text = getSettingsLabel()
         serveIndicatorView.center.y = settingsView.center.y
         self.serveIndicatorView.isHidden = true
+    }
+
+    private func nextSet() {
+        self.awayScore = 0
+        self.homeScore = 0
+        self.currentSet += currentSet
+        self.homeSets = 0
+        self.awaySets = 0
+        self.scoreHistory = []
+        self.currentServer = players[0]
     }
 
     private func calculateServe() {
@@ -134,11 +145,17 @@ class GameViewController: UIViewController {
 
     private func claculateWinner() {
         if homeScore > (maxScore - 1), homeScore > (awayScore + 1) {
+            saveFinalScore()
             wins(team: .home)
         } else if awayScore > (maxScore - 1), awayScore > (homeScore + 1) {
+            saveFinalScore()
             wins(team: .away)
-            print("away wins")
         }
+    }
+
+    private func saveFinalScore() {
+        let finalScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer)
+        setsHistory.append(finalScore)
     }
 
 //    private func setStartingServePosition() {
@@ -178,7 +195,10 @@ class GameViewController: UIViewController {
 
     func getResultViewModel() -> ResultViewModel {
 //        TODO: safely unwrap optional
-        return ResultViewModel(server: currentServer!, scores: scoreHistory)
+        let finalSet = setsHistory.count >= maxSets ? true : false
+
+        let viewModel = ResultViewModel(server: currentServer!, sets: setsHistory, final: finalSet)
+        return viewModel
     }
 
     private func saveScoreToHistory() {
@@ -188,13 +208,9 @@ class GameViewController: UIViewController {
     }
 
     private func removeServe() {
-//        if serveHistory.count > 1 {
-//            serveHistory.removeLast()
-//        }
         if !scoreHistory.isEmpty {
             scoreHistory.removeLast()
         }
-        calculateServe()
     }
 
     //    MARK: Scoring Actions

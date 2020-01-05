@@ -9,17 +9,19 @@
 import Foundation
 
 class ResultViewModel {
-    let winningTeam: Team
+    var winningTeam: Team
     let server: Player
-    let scores: [Score]
     let winningScore: String
+    let maxSets: Int = 1
+    let sets: [Score]
 
-    init(server: Player, scores: [Score]) {
+    init(server: Player, sets: [Score], final: Bool = false) {
         self.server = server
-        self.scores = scores
+        self.sets = sets
 
-        self.winningTeam = scores.last!.home > scores.last!.away ? .home : .away
-        self.winningScore = "\(scores.last!.home) : \(scores.last!.away)"
+        let homeScore = sets.last!.home
+        let awayScore = sets.last!.away
+        self.winningTeam = homeScore > awayScore ? .home : .away
+        self.winningScore = "\(homeScore) : \(awayScore)"
     }
-
 }
