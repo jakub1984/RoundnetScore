@@ -10,6 +10,8 @@ import UIKit
 
 class GameViewController: UIViewController {
 
+    var viewModel: GameViewModel
+
     //    MARK: Outlets
     @IBOutlet weak var homeScoreLbl: UILabel!
     @IBOutlet weak var awayScoreLbl: UILabel!
@@ -50,20 +52,40 @@ class GameViewController: UIViewController {
 
     private var currentSet: Int = 1
 
-    convenience init() {
-        self.init()
+
+//    init(viewModel: GameViewModel) {
+//        self.viewModel = viewModel
+//    }
+
+    init?(coder: NSCoder, viewModel: GameViewModel) {
+        self.viewModel = viewModel
+        self.players = viewModel.players
+        self.currentServer = viewModel.currentServer
         
-        self.players = [
-            Player(team: .noTeam, position: .NO),
-            Player(team: .home, position: .A),
-            Player(team: .away, position: .A),
-            Player(team: .home, position: .B),
-            Player(team: .away, position: .B)
-        ]
-        self.currentServer = players[0]
-//        newGame()
+        super.init(coder: coder)
     }
 
+//    required init?(coder: NSCoder) {
+////        self.players = viewModel.players
+////        self.currentServer = viewModel.currentServer
+//        super.init(coder: coder)
+//    }
+
+
+//    convenience init() {
+//        self.init()
+//
+//        self.players = [
+//            Player(team: .noTeam, position: .NO),
+//            Player(team: .home, position: .A),
+//            Player(team: .away, position: .A),
+//            Player(team: .home, position: .B),
+//            Player(team: .away, position: .B)
+//        ]
+//        self.currentServer = players[0]
+////        newGame()
+//    }
+//
     required init?(coder: NSCoder) {
         fatalError("init(coder:) is not supported")
     }

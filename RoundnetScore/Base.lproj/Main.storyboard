@@ -10,7 +10,7 @@
         <!--Game-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="GameViewController" customModule="RoundnetScore" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GameViewController" id="BYZ-38-t0r" customClass="GameViewController" customModule="RoundnetScore" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -304,7 +304,7 @@
         <!--Result-->
         <scene sceneID="wV1-Js-bBP">
             <objects>
-                <viewController storyboardIdentifier="ResultViewController" id="Pt8-Y0-q2H" customClass="ResultViewController" customModule="RoundnetScore" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ResultViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Pt8-Y0-q2H" customClass="ResultViewController" customModule="RoundnetScore" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bWm-8G-cj8">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -326,7 +326,7 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.023529411760000001" green="0.76470588240000004" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="03S-Qa-LxB" secondAttribute="trailing" constant="20" id="5SQ-QU-xFT"/>
                             <constraint firstItem="SLM-nH-lGJ" firstAttribute="top" secondItem="03S-Qa-LxB" secondAttribute="bottom" constant="20" id="Iok-yP-fgj"/>
@@ -349,7 +349,7 @@
         <!--Navigation Controller-->
         <scene sceneID="GhL-u4-ffk">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="vG6-pu-p4N" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="GameViewController2" automaticallyAdjustsScrollViewInsets="NO" id="vG6-pu-p4N" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="HQj-Un-OXk">
                         <rect key="frame" x="0.0" y="44" width="375" height="44"/>
