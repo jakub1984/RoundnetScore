@@ -104,30 +104,18 @@ class GameViewController: UIViewController {
     private func calculateServe() {
         if scoreHistory.isEmpty {
             currentServer = players[0]
-        } else if scoreHistory.count == 1 {
-            currentServer = homeScore > awayScore ? players[1] : players[2]
+//        } else if scoreHistory.count == 1 {
+//            currentServer = homeScore > awayScore ? players[1] : players[2]
         } else {
             let previousScore = scoreHistory[scoreHistory.count - 1]
-            let currentScore = scoreHistory.last
             let previousHomeScore = previousScore.home
             let previousAwayScore = previousScore.away
 
-            guard let currentHomeScore = currentScore?.home else { return }
-            guard let currentAwayScore = currentScore?.away else { return }
-
-            //        if scoreHistory.isEmpty {
-            //            serveIndicatorView.center.y = settingsView.center.y
-            //            serveIndicatorView.isHidden = true
-            //        } else if scoreHistory.count == 1 {
-            //            currentServer = currentHomeScore > currentAwayScore ? players[1] : players[2]
-            //            serveIndicatorView.isHidden = false
-            //            print("Starts Serving \(String(describing: currentServer?.id))")
-
-            if currentHomeScore > previousHomeScore && currentServer?.team == .away {
+            if homeScore > previousHomeScore && currentServer?.team == .away {
                 nextServer()
                 print("Serve changed to \(String(describing: currentServer?.id))")
 
-            } else if currentAwayScore > previousAwayScore && currentServer?.team == .home {
+            } else if awayScore > previousAwayScore && currentServer?.team == .home {
                 nextServer()
                 print("Serve changed to \(String(describing: currentServer?.id))")
 
@@ -140,7 +128,7 @@ class GameViewController: UIViewController {
     private func nextServer() {
         let currentServer = self.currentServer?.id ?? 0
         let nextId = currentServer + 1
-        let nextServer = currentServer == players.count ? players[1] : players[nextId]
+        let nextServer = nextId == players.count ? players[1] : players[nextId]
         self.currentServer = nextServer
     }
 
@@ -194,12 +182,8 @@ class GameViewController: UIViewController {
     }
 
     private func saveScoreToHistory() {
-        if homeScore == 0 && awayScore == 0 {
-            scoreHistory.append(Score(home: 0, away: 0, scoringPlayer: players[0]))
-        } else {
-            let currentScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer)
-            scoreHistory.append(currentScore)
-        }
+        let currentScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer)
+        scoreHistory.append(currentScore)
         print("Last score saved \(String(describing: scoreHistory.last))")
     }
 
