@@ -30,7 +30,13 @@ class GameViewController: UIViewController {
     static let white = UIColor(red: 241, green: 247, blue: 238, alpha: 1)
     static let yellow = UIColor(red: 250, green: 222, blue: 50, alpha: 1)
 
-    private var players: [Player]
+    private var players: [Player] = [
+        Player(team: .noTeam, position: .NO),
+        Player(team: .home, position: .A),
+        Player(team: .away, position: .A),
+        Player(team: .home, position: .B),
+        Player(team: .away, position: .B)
+    ]
 
     private var homeScore: Int = 0
     private var homeSets: Int = 0
@@ -42,7 +48,7 @@ class GameViewController: UIViewController {
     private var setsHistory: [Score] = []
     private var scoreHistory: [Score] = []
 
-    private var currentServer: Player
+    private var currentServer: Player? = Player(team: .noTeam, position: .NO)
 
     var maxScore: Int = 15
     var maxSets: Int = 3
@@ -50,27 +56,27 @@ class GameViewController: UIViewController {
 
     private var currentSet: Int = 1
 
-    convenience init() {
-        self.init()
-        
-        self.players = [
-            Player(team: .noTeam, position: .NO),
-            Player(team: .home, position: .A),
-            Player(team: .away, position: .A),
-            Player(team: .home, position: .B),
-            Player(team: .away, position: .B)
-        ]
-        self.currentServer = players[0]
-//        newGame()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) is not supported")
-    }
+//    convenience init() {
+//        self.init()
+//
+//        self.players = [
+//            Player(team: .noTeam, position: .NO),
+//            Player(team: .home, position: .A),
+//            Player(team: .away, position: .A),
+//            Player(team: .home, position: .B),
+//            Player(team: .away, position: .B)
+//        ]
+//        self.currentServer = players[0]
+////        newGame()
+//    }
+//
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) is not supported")
+//    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        newGame()
+        newGame()
     }
 
 //    override func viewWillAppear(_ animated: Bool) {
@@ -117,22 +123,22 @@ class GameViewController: UIViewController {
             //            serveIndicatorView.isHidden = false
             //            print("Starts Serving \(String(describing: currentServer?.id))")
 
-            if currentHomeScore > previousHomeScore && currentServer.team == .away {
+            if currentHomeScore > previousHomeScore && currentServer?.team == .away {
                 nextServer()
-                print("Serve changed to \(String(describing: currentServer.id))")
+                print("Serve changed to \(String(describing: currentServer?.id))")
 
-            } else if currentAwayScore > previousAwayScore && currentServer.team == .home {
+            } else if currentAwayScore > previousAwayScore && currentServer?.team == .home {
                 nextServer()
-                print("Serve changed to \(String(describing: currentServer.id))")
+                print("Serve changed to \(String(describing: currentServer?.id))")
 
             } else {
-                print("Serve stays with player \(String(describing: currentServer.id))")
+                print("Serve stays with player \(String(describing: currentServer?.id))")
             }
         }
     }
 
     private func nextServer() {
-        let currentServer = self.currentServer.id
+        let currentServer = self.currentServer?.id ?? 0
         let nextId = currentServer + 1
         let nextServer = currentServer == players.count ? players[1] : players[nextId]
         self.currentServer = nextServer
@@ -183,7 +189,8 @@ class GameViewController: UIViewController {
     }
 
     func getResultViewModel() -> ResultViewModel {
-        return ResultViewModel(server: currentServer, scores: scoreHistory)
+//        TODO: safely unwrap optional
+        return ResultViewModel(server: currentServer!, scores: scoreHistory)
     }
 
     private func saveScoreToHistory() {
@@ -216,7 +223,7 @@ class GameViewController: UIViewController {
             homeScoreLbl.text = getScore(team: homeScore)
             calculateServe()
             claculateWinner()
-            print("Scored mr: \(String(describing: currentServer.id))")
+            print("Scored mr: \(String(describing: currentServer?.id))")
         }
         saveScoreToHistory()
     }
@@ -230,7 +237,7 @@ class GameViewController: UIViewController {
             awayScoreLbl.text = getScore(team: awayScore)
             calculateServe()
             claculateWinner()
-            print("Scored mr: \(String(describing: currentServer.id))")
+            print("Scored mr: \(String(describing: currentServer?.id))")
         }
         saveScoreToHistory()
     }
