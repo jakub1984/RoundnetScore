@@ -9,7 +9,7 @@
 import Foundation
 
 class ResultViewModel {
-    var winningTeam: Team
+    let winningTeam: Team
     let server: Player
     let winningScore: String
     let maxSets: Int = 1

@@ -38,6 +38,8 @@ class GameViewController: UIViewController {
         Player(team: .away, position: .B)
     ]
 
+    var viewModel = GameViewModel()
+
     private var homeScore: Int = 0
     private var homeSets: Int = 0
 
@@ -53,6 +55,7 @@ class GameViewController: UIViewController {
     var maxScore: Int = 15
     var maxSets: Int = 3
     var startingTeam: Team = .noTeam
+    var hardCap: Int? = nil
 
     private var currentSet: Int = 1
 
@@ -84,13 +87,26 @@ class GameViewController: UIViewController {
     }
 
     private func newGame() {
+        self.currentSet = 1
+        updateNewGameUI()
+    }
+
+    private func nextSet() {
+        guard !setsHistory.isEmpty else { return }
+        self.currentSet += currentSet
+
+        updateNewGameUI()
+    }
+
+    private func updateNewGameUI() {
         self.awayScore = 0
         self.homeScore = 0
-        self.currentSet = 1
-        self.homeSets = 0
-        self.awaySets = 0
+
+        updateSets()
+        updateServer()
+
         self.scoreHistory = []
-        self.currentServer = players[0]
+
 
         self.homeScoreLbl.text = getScore(team: homeScore)
         self.awayScoreLbl.text = getScore(team: awayScore)
@@ -101,15 +117,23 @@ class GameViewController: UIViewController {
         self.serveIndicatorView.isHidden = true
     }
 
-    private func nextSet() {
-        guard !setsHistory.isEmpty else { return }
-        self.awayScore = 0
-        self.homeScore = 0
-        self.currentSet += currentSet
+    private func updateServer() {
+        if currentServer != players[0] {
+            self.currentServer = currentServer?.team == .away ? players[1] : players[2]
+        }
+    }
+
+    private func updateSets() {
         self.homeSets = 0
         self.awaySets = 0
-        self.scoreHistory = []
-        self.currentServer = players[0]
+
+        setsHistory.forEach { score in
+            if score.home > score.away {
+                homeSets += homeSets
+            } else {
+                awaySets += awaySets
+            }
+        }
     }
 
     private func calculateServe() {
@@ -276,7 +300,7 @@ extension GameViewController {
     }
 
     func getSetsLabel(team: Int) -> String {
-        let label = maxSets == 1 ? "" : "Wins: \(team)"
+        let label = maxSets == 1 ? "" : "Sets: \(team)"
         return label
     }
 }
