@@ -80,8 +80,7 @@ class GameViewController: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        newGame()
-
+        nextSet()
     }
 
     private func newGame() {
@@ -103,6 +102,7 @@ class GameViewController: UIViewController {
     }
 
     private func nextSet() {
+        guard !setsHistory.isEmpty else { return }
         self.awayScore = 0
         self.homeScore = 0
         self.currentSet += currentSet
@@ -190,7 +190,7 @@ class GameViewController: UIViewController {
 //        vc.modalPresentationStyle = .overCurrentContext
 //        present(vc, animated: true, completion: nil)
 
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: false)
     }
 
     func getResultViewModel() -> ResultViewModel {
