@@ -46,7 +46,6 @@ class GameViewController: UIViewController {
     private var awayScore: Int = 0
     private var awaySets: Int = 0
 
-    private var serveHistory: [Int] = [0]
     private var setsHistory: [Score] = []
     private var scoreHistory: [Score] = []
 
@@ -107,7 +106,6 @@ class GameViewController: UIViewController {
 
         self.scoreHistory = []
 
-
         self.homeScoreLbl.text = getScore(team: homeScore)
         self.awayScoreLbl.text = getScore(team: awayScore)
         self.homeSetsLbl.text = getSetsLabel(team: homeSets)
@@ -139,8 +137,6 @@ class GameViewController: UIViewController {
     private func calculateServe() {
         if scoreHistory.isEmpty {
             currentServer = players[0]
-//        } else if scoreHistory.count == 1 {
-//            currentServer = homeScore > awayScore ? players[1] : players[2]
         } else {
             let previousScore = scoreHistory[scoreHistory.count - 1]
             let previousHomeScore = previousScore.home
@@ -165,6 +161,22 @@ class GameViewController: UIViewController {
         let nextId = currentServer + 1
         let nextServer = nextId == players.count ? players[1] : players[nextId]
         self.currentServer = nextServer
+    }
+
+    private func previousServer() {
+//        let currentServer = self.currentServer?.id ?? 1
+//        let previousId = currentServer - 1
+//        let previousServer = previousId == 0 ? players[4] : players[previousId]
+//        self.currentServer = previousServer
+//        print("Previous Server mr: \(String(describing: self.currentServer?.id))")
+
+        guard let lastServer = scoreHistory.last?.scoringPlayer else {
+            self.currentServer = players[0]
+            return
+        }
+        self.currentServer = lastServer
+        print("Previous Server mr: \(String(describing: self.currentServer?.id))")
+
     }
 
     private func claculateWinner() {
@@ -231,7 +243,7 @@ class GameViewController: UIViewController {
         print("Last score saved \(String(describing: scoreHistory.last))")
     }
 
-    private func removeServe() {
+    private func removeScore() {
         if !scoreHistory.isEmpty {
             scoreHistory.removeLast()
         }
@@ -267,21 +279,25 @@ class GameViewController: UIViewController {
     }
 
     @IBAction func homeDidRemove(_ sender: UIButton) {
-        guard homeScore > 0 else { return }
-
-        homeScore -= 1
-        homeScoreLbl.text = getScore(team: homeScore)
-        removeServe()
-        calculateServe()
+        if homeScore > 0 {
+            homeScore -= 1
+            homeScoreLbl.text = getScore(team: homeScore)
+            removeScore()
+            previousServer()
+        } else if scoreHistory.isEmpty {
+            self.currentServer = players[0]
+        }
     }
 
     @IBAction func awayDidRemove(_ sender: UIButton) {
-        guard awayScore > 0 else { return }
-
-        awayScore -= 1
-        awayScoreLbl.text = getScore(team: awayScore)
-        removeServe()
-        calculateServe()
+        if awayScore > 0 {
+            awayScore -= 1
+            awayScoreLbl.text = getScore(team: awayScore)
+            removeScore()
+            previousServer()
+        } else if scoreHistory.isEmpty {
+            self.currentServer = players[0]
+        }
     }
 
     @IBAction func didPressRestart(_ sender: UIBarButtonItem) {
