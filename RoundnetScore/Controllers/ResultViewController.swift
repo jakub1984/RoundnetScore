@@ -12,7 +12,10 @@ class ResultViewController: UIViewController {
 
     @IBOutlet weak var resultLbl: UILabel!
     @IBOutlet weak var nextGameLbl: UIButton!
-
+    @IBOutlet weak var setsScoreLbl: UILabel!
+    @IBOutlet weak var gameScoreLbl: UILabel!
+    @IBOutlet weak var setsHistoryLbl: UILabel!
+    
     var viewModel: ResultViewModel
 
     var winner: Team = .noTeam
