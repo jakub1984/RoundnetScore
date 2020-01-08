@@ -15,8 +15,8 @@ enum Team: String, CaseIterable {
 
     var wins: String {
         switch self {
-        case .home: return "Home wins"
-        case .away: return "Away wins"
+        case .home: return "HOME TEAM"
+        case .away: return "AWAY TEAM"
         case .noTeam: return "Nobody wins"
         }
     }
