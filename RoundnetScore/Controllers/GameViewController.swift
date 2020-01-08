@@ -279,24 +279,30 @@ class GameViewController: UIViewController {
     }
 
     @IBAction func homeDidRemove(_ sender: UIButton) {
+        if homeScore == 0 && awayScore == 0 {
+            removeScore()
+            self.currentServer = players[0]
+        }
+
         if homeScore > 0 {
             homeScore -= 1
             homeScoreLbl.text = getScore(team: homeScore)
             removeScore()
             previousServer()
-        } else if scoreHistory.isEmpty {
-            self.currentServer = players[0]
         }
     }
 
     @IBAction func awayDidRemove(_ sender: UIButton) {
+        if homeScore == 0 && awayScore == 0 {
+            removeScore()
+            self.currentServer = players[0]
+        }
+
         if awayScore > 0 {
             awayScore -= 1
             awayScoreLbl.text = getScore(team: awayScore)
             removeScore()
             previousServer()
-        } else if scoreHistory.isEmpty {
-            self.currentServer = players[0]
         }
     }
 
