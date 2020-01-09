@@ -80,12 +80,13 @@
                                                 </constraints>
                                             </imageView>
                                         </subviews>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <color key="backgroundColor" red="0.94509803920000002" green="0.96862745100000003" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstItem="MkT-xG-ofx" firstAttribute="leading" secondItem="Ah6-uf-dkf" secondAttribute="leading" constant="10" id="4JD-XX-bhD"/>
                                             <constraint firstItem="HOZ-UJ-BvO" firstAttribute="centerY" secondItem="Ah6-uf-dkf" secondAttribute="centerY" id="ITJ-vq-mqf"/>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="VYe-la-d93"/>
                                             <constraint firstAttribute="trailing" secondItem="HOZ-UJ-BvO" secondAttribute="trailing" constant="10" id="W5S-bK-pQY"/>
+                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="MkT-xG-ofx" secondAttribute="trailing" constant="10" id="aZU-cx-vb2"/>
                                             <constraint firstItem="MkT-xG-ofx" firstAttribute="centerY" secondItem="Ah6-uf-dkf" secondAttribute="centerY" id="gVM-QZ-X5U"/>
                                             <constraint firstAttribute="height" constant="30" id="pDn-Kh-W92"/>
                                         </constraints>
@@ -100,8 +101,9 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <color key="backgroundColor" red="0.94509803920000002" green="0.96862745100000003" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
+                                            <constraint firstItem="aBn-Vb-cUw" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="RCt-eU-rP7" secondAttribute="leading" constant="20" symbolic="YES" id="08T-A9-n6n"/>
                                             <constraint firstAttribute="trailing" secondItem="aBn-Vb-cUw" secondAttribute="trailing" constant="10" id="G6N-ws-xM0"/>
                                             <constraint firstItem="aBn-Vb-cUw" firstAttribute="centerY" secondItem="RCt-eU-rP7" secondAttribute="centerY" id="oJw-1h-KO0"/>
                                             <constraint firstAttribute="height" constant="30" id="w0i-kC-4Y5"/>
@@ -189,10 +191,11 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <color key="backgroundColor" red="0.94509803920000002" green="0.96862745100000003" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="Aec-3p-RmL"/>
                                             <constraint firstItem="JaN-ok-gyy" firstAttribute="centerY" secondItem="XL6-gG-ZEc" secondAttribute="centerY" id="FLN-bN-fwd"/>
+                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="JaN-ok-gyy" secondAttribute="trailing" constant="20" symbolic="YES" id="b8N-jp-1pF"/>
                                             <constraint firstItem="JaN-ok-gyy" firstAttribute="leading" secondItem="XL6-gG-ZEc" secondAttribute="leading" constant="10" id="hQE-dA-P7u"/>
                                         </constraints>
                                     </view>
@@ -206,8 +209,9 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <color key="backgroundColor" red="0.98039215690000003" green="0.87058823529999996" blue="0.29411764709999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
+                                            <constraint firstItem="rDA-za-E70" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="4aR-Qp-sq1" secondAttribute="leading" constant="20" symbolic="YES" id="HgR-y9-gc3"/>
                                             <constraint firstAttribute="height" constant="30" id="QtS-dO-HXn"/>
                                             <constraint firstItem="rDA-za-E70" firstAttribute="centerY" secondItem="4aR-Qp-sq1" secondAttribute="centerY" id="R9N-Q0-H8o"/>
                                             <constraint firstAttribute="trailing" secondItem="rDA-za-E70" secondAttribute="trailing" constant="10" id="S5X-TR-JDV"/>
