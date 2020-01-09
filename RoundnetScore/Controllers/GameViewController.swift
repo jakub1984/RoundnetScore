@@ -56,8 +56,6 @@ class GameViewController: UIViewController {
     var startingTeam: Team = .noTeam
     var hardCap: Int? = nil
 
-    private var currentSet: Int = 1
-
 //    convenience init() {
 //        self.init()
 //
@@ -86,13 +84,14 @@ class GameViewController: UIViewController {
     }
 
     private func newGame() {
-        self.currentSet = 1
         updateNewGameUI()
     }
 
     private func nextSet() {
         guard !setsHistory.isEmpty else { return }
-        self.currentSet += currentSet
+        if setsHistory.count == maxSets {
+            self.setsHistory.removeAll()
+        }
 
         updateNewGameUI()
     }
@@ -189,6 +188,16 @@ class GameViewController: UIViewController {
         }
     }
 
+    private func isFinalGame() -> Bool {
+        if maxSets == 1,
+            homeSets > awaySets + 1 && homeSets > maxSets / 2,
+            awaySets > homeSets + 1 && awaySets > maxSets / 2 {
+            return true
+        } else {
+            return false
+        }
+    }
+
     private func saveFinalScore() {
         let finalScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer)
         setsHistory.append(finalScore)
@@ -211,7 +220,7 @@ class GameViewController: UIViewController {
 //    }
 
     private func getSettingsLabel() -> String {
-        let label = maxSets == 1 ? "First to \(maxScore) points win" : "Set \(currentSet) of \(maxSets) | \(maxScore) points win"
+        let label = maxSets == 1 ? "First to \(maxScore) points win" : "Set \(setsHistory.count) of \(maxSets) | \(maxScore) points win"
         return label
     }
 
@@ -231,7 +240,7 @@ class GameViewController: UIViewController {
 
     func getResultViewModel() -> ResultViewModel {
 //        TODO: safely unwrap optional
-        let finalSet = setsHistory.count >= maxSets ? true : false
+        let finalSet = isFinalGame()
 
         let viewModel = ResultViewModel(server: currentServer!, sets: setsHistory, final: finalSet)
         return viewModel
