@@ -49,7 +49,7 @@ class GameViewController: UIViewController {
     private var setsHistory: [Score] = []
     private var scoreHistory: [Score] = []
 
-    private var currentServer: Player? = Player(team: .noTeam, position: .NO)
+    private var currentServer: Player = Player(team: .noTeam, position: .NO)
 
     var maxScore: Int = 15
     var maxSets: Int = 3
@@ -116,7 +116,7 @@ class GameViewController: UIViewController {
 
     private func updateServer() {
         if currentServer != players[0] {
-            self.currentServer = currentServer?.team == .away ? players[1] : players[2]
+            self.currentServer = currentServer.team == .away ? players[1] : players[2]
         }
     }
 
@@ -141,22 +141,22 @@ class GameViewController: UIViewController {
             let previousHomeScore = previousScore.home
             let previousAwayScore = previousScore.away
 
-            if homeScore > previousHomeScore && currentServer?.team == .away {
+            if homeScore > previousHomeScore && currentServer.team == .away {
                 nextServer()
-                print("Serve changed to \(String(describing: currentServer?.id))")
+                print("Serve changed to \(String(describing: currentServer.id))")
 
-            } else if awayScore > previousAwayScore && currentServer?.team == .home {
+            } else if awayScore > previousAwayScore && currentServer.team == .home {
                 nextServer()
-                print("Serve changed to \(String(describing: currentServer?.id))")
+                print("Serve changed to \(String(describing: currentServer.id))")
 
             } else {
-                print("Serve stays with player \(String(describing: currentServer?.id))")
+                print("Serve stays with player \(String(describing: currentServer.id))")
             }
         }
     }
 
     private func nextServer() {
-        let currentServer = self.currentServer?.id ?? 0
+        let currentServer = self.currentServer.id
         let nextId = currentServer + 1
         let nextServer = nextId == players.count ? players[1] : players[nextId]
         self.currentServer = nextServer
@@ -174,7 +174,7 @@ class GameViewController: UIViewController {
             return
         }
         self.currentServer = lastServer
-        print("Previous Server mr: \(String(describing: self.currentServer?.id))")
+        print("Previous Server mr: \(String(describing: self.currentServer.id))")
 
     }
 
@@ -232,9 +232,6 @@ class GameViewController: UIViewController {
             fatalError("Failed to load ResultViewController from storyboard.")
         }
 
-//        vc.modalPresentationStyle = .overCurrentContext
-//        present(vc, animated: true, completion: nil)
-
         navigationController?.pushViewController(vc, animated: false)
     }
 
@@ -242,7 +239,7 @@ class GameViewController: UIViewController {
 //        TODO: safely unwrap optional
         let finalSet = isFinalGame()
 
-        let viewModel = ResultViewModel(server: currentServer!, sets: setsHistory, final: finalSet)
+        let viewModel = ResultViewModel(server: currentServer, sets: setsHistory, final: finalSet)
         return viewModel
     }
 
@@ -268,7 +265,7 @@ class GameViewController: UIViewController {
             homeScoreLbl.text = getScore(team: homeScore)
             calculateServe()
             claculateWinner()
-            print("Scored mr: \(String(describing: currentServer?.id))")
+            print("Scored mr: \(String(describing: currentServer.id))")
         }
         saveScoreToHistory()
     }
@@ -282,7 +279,7 @@ class GameViewController: UIViewController {
             awayScoreLbl.text = getScore(team: awayScore)
             calculateServe()
             claculateWinner()
-            print("Scored mr: \(String(describing: currentServer?.id))")
+            print("Scored mr: \(String(describing: currentServer.id))")
         }
         saveScoreToHistory()
     }
