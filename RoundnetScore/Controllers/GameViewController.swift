@@ -119,17 +119,21 @@ class GameViewController: UIViewController {
         switch currentServer.team {
         case .away:
             if serverHomeAView.backgroundColor == .yellow {
+                clearAllReceiversBackground()
                 serverHomeAView.backgroundColor = .white
                 serverHomeBView.backgroundColor = .yellow
             } else {
+                clearAllReceiversBackground()
                 serverHomeBView.backgroundColor = .white
                 serverHomeAView.backgroundColor = .yellow
             }
         case .home:
             if serverAwayAView.backgroundColor == .yellow {
+                clearAllReceiversBackground()
                 serverAwayAView.backgroundColor = .white
                 serverAwayBView.backgroundColor = .yellow
             } else {
+                clearAllReceiversBackground()
                 serverAwayBView.backgroundColor = .white
                 serverAwayAView.backgroundColor = .yellow
             }
@@ -170,6 +174,7 @@ class GameViewController: UIViewController {
         self.setsConfiguartionLbl.text = getSettingsLabel()
         serveIndicatorView.center.y = settingsView.center.y
         self.serveIndicatorView.isHidden = true
+        clearAllReceiversBackground()
     }
 
     private func updateServer() {
@@ -226,19 +231,18 @@ class GameViewController: UIViewController {
 
 
     private func previousServer() {
-//        let currentServer = self.currentServer?.id ?? 1
-//        let previousId = currentServer - 1
-//        let previousServer = previousId == 0 ? players[4] : players[previousId]
-//        self.currentServer = previousServer
-//        print("Previous Server mr: \(String(describing: self.currentServer?.id))")
-
         guard let lastServer = scoreHistory.last?.scoringPlayer else {
             self.currentServer = players[0]
             return
         }
+        if lastServer == self.currentServer {
+            switchTeamReceiverBackground()
+        } else {
+            hightlightServeReceiver()
+        }
+
         self.currentServer = lastServer
         print("Previous Server mr: \(String(describing: self.currentServer.id))")
-
     }
 
     private func claculateWinner() {
@@ -323,6 +327,7 @@ class GameViewController: UIViewController {
         if self.scoreHistory.isEmpty {
             currentServer = players[1]
             serveIndicatorView.isHidden = false
+            hightlightServeReceiver()
         } else {
             homeScore += 1
             homeScoreLbl.text = getScore(team: homeScore)
@@ -337,6 +342,7 @@ class GameViewController: UIViewController {
         if self.scoreHistory.isEmpty {
             currentServer = players[2]
             serveIndicatorView.isHidden = false
+            hightlightServeReceiver()
         } else {
             awayScore += 1
             awayScoreLbl.text = getScore(team: awayScore)
@@ -351,6 +357,7 @@ class GameViewController: UIViewController {
         if homeScore == 0 && awayScore == 0 {
             removeScore()
             self.currentServer = players[0]
+            clearAllReceiversBackground()
         }
 
         if homeScore > 0 {
@@ -365,6 +372,7 @@ class GameViewController: UIViewController {
         if homeScore == 0 && awayScore == 0 {
             removeScore()
             self.currentServer = players[0]
+            clearAllReceiversBackground()
         }
 
         if awayScore > 0 {
