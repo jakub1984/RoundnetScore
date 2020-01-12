@@ -50,6 +50,7 @@ class GameViewController: UIViewController {
     private var scoreHistory: [Score] = []
 
     private var currentServer: Player = Player(team: .noTeam, position: .NO)
+    private var currentReceiver: Player = Player(team: .noTeam, position: .NO)
 
     var maxScore: Int = 15
     var maxSets: Int = 3
@@ -115,6 +116,21 @@ class GameViewController: UIViewController {
         }
     }
 
+    private func hightlightServerBackground() {
+        switch currentServer {
+        case players[1]:
+            serverHomeAView.backgroundColor = .lightGray
+        case players[2]:
+            serverAwayAView.backgroundColor = .lightGray
+        case players[3]:
+            serverHomeBView.backgroundColor = .lightGray
+        case players[4]:
+            serverAwayBView.backgroundColor = .lightGray
+        default:
+            clearAllReceiversBackground()
+        }
+    }
+
     private func switchTeamReceiverBackground() {
         switch currentServer.team {
         case .away:
@@ -163,6 +179,8 @@ class GameViewController: UIViewController {
         self.homeScore = 0
 
         updateSets()
+
+//        TODO: prověřit že se chová podle pravidel
         updateServer()
 
         self.scoreHistory = []
@@ -218,6 +236,7 @@ class GameViewController: UIViewController {
                 print("Serve stays with player \(String(describing: currentServer.id))")
             }
         }
+        hightlightServerBackground()
     }
 
     private func nextServer() {
@@ -227,8 +246,6 @@ class GameViewController: UIViewController {
         self.currentServer = nextServer
         hightlightServeReceiver()
     }
-
-
 
     private func previousServer() {
         guard let lastServer = scoreHistory.last?.scoringPlayer else {
@@ -242,6 +259,7 @@ class GameViewController: UIViewController {
         }
 
         self.currentServer = lastServer
+        hightlightServerBackground()
         print("Previous Server mr: \(String(describing: self.currentServer.id))")
     }
 
@@ -303,7 +321,6 @@ class GameViewController: UIViewController {
     }
 
     func getResultViewModel() -> ResultViewModel {
-//        TODO: safely unwrap optional
         let finalSet = isFinalGame()
 
         let viewModel = ResultViewModel(server: currentServer, sets: setsHistory, final: finalSet)
@@ -326,8 +343,9 @@ class GameViewController: UIViewController {
     @IBAction func homeDidScore(_ sender: UIButton) {
         if self.scoreHistory.isEmpty {
             currentServer = players[1]
-            serveIndicatorView.isHidden = false
+//            serveIndicatorView.isHidden = false
             hightlightServeReceiver()
+            hightlightServerBackground()
         } else {
             homeScore += 1
             homeScoreLbl.text = getScore(team: homeScore)
@@ -341,8 +359,9 @@ class GameViewController: UIViewController {
     @IBAction func awayDidScore(_ sender: UIButton) {
         if self.scoreHistory.isEmpty {
             currentServer = players[2]
-            serveIndicatorView.isHidden = false
+//            serveIndicatorView.isHidden = false
             hightlightServeReceiver()
+            hightlightServerBackground()
         } else {
             awayScore += 1
             awayScoreLbl.text = getScore(team: awayScore)
