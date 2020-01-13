@@ -24,6 +24,9 @@ class GameViewController: UIViewController {
     @IBOutlet weak var serverAwayAView: UIView!
     @IBOutlet weak var serverAwayBView: UIView!
 
+
+    
+
     static let green = UIColor(red: 6, green: 195, blue: 146, alpha: 1)
     static let blue = UIColor(red: 3, green: 27, blue: 62, alpha: 1)
     static let red = UIColor(red: 218, green: 65, blue: 101, alpha: 1)
