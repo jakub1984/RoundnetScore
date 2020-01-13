@@ -100,23 +100,21 @@ class GameViewController: UIViewController {
 //    @IBOutlet weak var serverAwayAView: UIView!
 //    @IBOutlet weak var serverAwayBView: UIView!
 
-    private func hightlightServeReceiver() {
+    private func setPlayerBackgrounds() {
         clearAllReceiversBackground()
-        switch currentServer {
+        switch currentReceiver {
         case players[1]:
-            serverAwayBView.backgroundColor = .yellow
-        case players[2]:
-            serverHomeBView.backgroundColor = .yellow
-        case players[3]:
-            serverAwayAView.backgroundColor = .yellow
-        case players[4]:
             serverHomeAView.backgroundColor = .yellow
+        case players[2]:
+            serverAwayAView.backgroundColor = .yellow
+        case players[3]:
+            serverHomeBView.backgroundColor = .yellow
+        case players[4]:
+            serverAwayBView.backgroundColor = .yellow
         default:
-            serveIndicatorView.isHidden = true
+            break
         }
-    }
 
-    private func hightlightServerBackground() {
         switch currentServer {
         case players[1]:
             serverHomeAView.backgroundColor = .lightGray
@@ -127,42 +125,43 @@ class GameViewController: UIViewController {
         case players[4]:
             serverAwayBView.backgroundColor = .lightGray
         default:
-            clearAllReceiversBackground()
+            serveIndicatorView.isHidden = true
         }
     }
 
-    private func switchTeamReceiverBackground() {
-        switch currentServer.team {
-        case .away:
-            if serverHomeAView.backgroundColor == .yellow {
-                clearAllReceiversBackground()
-                serverHomeAView.backgroundColor = .white
-                serverHomeBView.backgroundColor = .yellow
-            } else {
-                clearAllReceiversBackground()
-                serverHomeBView.backgroundColor = .white
-                serverHomeAView.backgroundColor = .yellow
-            }
+    private func getReceiver() {
+        switch currentServer {
+        case players[0]:
+            currentReceiver = players[0]
+        case players[1]:
+            currentReceiver = players[4]
+        case players[2]:
+            currentReceiver = players[3]
+        case players[3]:
+            currentReceiver = players[2]
+        case players[4]:
+            currentReceiver = players[1]
+        default:
+            break
+        }
+    }
+
+    private func switchTeamReceiver() {
+        switch currentReceiver.team {
         case .home:
-            if serverAwayAView.backgroundColor == .yellow {
-                clearAllReceiversBackground()
-                serverAwayAView.backgroundColor = .white
-                serverAwayBView.backgroundColor = .yellow
-            } else {
-                clearAllReceiversBackground()
-                serverAwayBView.backgroundColor = .white
-                serverAwayAView.backgroundColor = .yellow
-            }
+            currentReceiver = currentReceiver == players[1] ? players[3] : players[1]
+        case .away:
+            currentReceiver = currentReceiver == players[2] ? players[4] : players[2]
         default:
             break
         }
     }
 
     private func clearAllReceiversBackground() {
-            serverHomeAView.backgroundColor = .white
-            serverHomeBView.backgroundColor = .white
-            serverAwayAView.backgroundColor = .white
-            serverAwayBView.backgroundColor = .white
+        serverHomeAView.backgroundColor = .white
+        serverHomeBView.backgroundColor = .white
+        serverAwayAView.backgroundColor = .white
+        serverAwayBView.backgroundColor = .white
     }
 
     private func nextSet() {
@@ -196,6 +195,8 @@ class GameViewController: UIViewController {
     }
 
     private func updateServer() {
+
+//        TODO: přepsat aby zahajoval set druhý tým
         if currentServer != players[0] {
             self.currentServer = currentServer.team == .away ? players[1] : players[2]
         }
@@ -217,6 +218,7 @@ class GameViewController: UIViewController {
     private func calculateServe() {
         if scoreHistory.isEmpty {
             currentServer = players[0]
+            currentReceiver = players[0]
             clearAllReceiversBackground()
         } else {
             let previousScore = scoreHistory[scoreHistory.count - 1]
@@ -225,18 +227,19 @@ class GameViewController: UIViewController {
 
             if homeScore > previousHomeScore && currentServer.team == .away {
                 nextServer()
+                getReceiver()
                 print("Serve changed to \(String(describing: currentServer.id))")
 
             } else if awayScore > previousAwayScore && currentServer.team == .home {
                 nextServer()
+                getReceiver()
                 print("Serve changed to \(String(describing: currentServer.id))")
 
             } else {
-                switchTeamReceiverBackground()
+                switchTeamReceiver()
                 print("Serve stays with player \(String(describing: currentServer.id))")
             }
         }
-        hightlightServerBackground()
     }
 
     private func nextServer() {
@@ -244,22 +247,20 @@ class GameViewController: UIViewController {
         let nextId = currentServer + 1
         let nextServer = nextId == players.count ? players[1] : players[nextId]
         self.currentServer = nextServer
-        hightlightServeReceiver()
     }
 
     private func previousServer() {
-        guard let lastServer = scoreHistory.last?.scoringPlayer else {
-            self.currentServer = players[0]
-            return
-        }
-        if lastServer == self.currentServer {
-            switchTeamReceiverBackground()
+        let lastScore = scoreHistory.last
+
+        if let lastServer = lastScore?.scoringPlayer, let lastReceiver = lastScore?.receivingPlayer {
+            self.currentServer = lastServer
+            self.currentReceiver = lastReceiver
         } else {
-            hightlightServeReceiver()
+            self.currentServer = players[0]
+            self.currentReceiver = players[0]
         }
 
-        self.currentServer = lastServer
-        hightlightServerBackground()
+        setPlayerBackgrounds()
         print("Previous Server mr: \(String(describing: self.currentServer.id))")
     }
 
@@ -284,7 +285,7 @@ class GameViewController: UIViewController {
     }
 
     private func saveFinalScore() {
-        let finalScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer)
+        let finalScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer, receivingPlayer: currentReceiver)
         setsHistory.append(finalScore)
     }
 
@@ -328,7 +329,7 @@ class GameViewController: UIViewController {
     }
 
     private func saveScoreToHistory() {
-        let currentScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer)
+        let currentScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer, receivingPlayer: currentReceiver)
         scoreHistory.append(currentScore)
         print("Last score saved \(String(describing: scoreHistory.last))")
     }
@@ -344,8 +345,7 @@ class GameViewController: UIViewController {
         if self.scoreHistory.isEmpty {
             currentServer = players[1]
 //            serveIndicatorView.isHidden = false
-            hightlightServeReceiver()
-            hightlightServerBackground()
+            currentReceiver = players[4]
         } else {
             homeScore += 1
             homeScoreLbl.text = getScore(team: homeScore)
@@ -353,15 +353,15 @@ class GameViewController: UIViewController {
             claculateWinner()
             print("Scored mr: \(String(describing: currentServer.id))")
         }
+        setPlayerBackgrounds()
         saveScoreToHistory()
     }
 
     @IBAction func awayDidScore(_ sender: UIButton) {
         if self.scoreHistory.isEmpty {
             currentServer = players[2]
+            currentReceiver = players[3]
 //            serveIndicatorView.isHidden = false
-            hightlightServeReceiver()
-            hightlightServerBackground()
         } else {
             awayScore += 1
             awayScoreLbl.text = getScore(team: awayScore)
@@ -369,6 +369,7 @@ class GameViewController: UIViewController {
             claculateWinner()
             print("Scored mr: \(String(describing: currentServer.id))")
         }
+        setPlayerBackgrounds()
         saveScoreToHistory()
     }
 
