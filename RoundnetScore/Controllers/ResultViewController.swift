@@ -49,14 +49,13 @@ class ResultViewController: UIViewController {
             resultLbl.text = "AWAY WINS"
         }
 
-        self.setsScoreLbl.text = self.viewModel.getSetsScoreLabel()
-        self.gameScoreLbl.text = self.viewModel.getGameScoreLabel()
-        self.nextGameLbl.titleLabel?.text = self.viewModel.getNextGameButtonLabel()
-        self.setsHistoryLbl.text = self.viewModel.getSetsHistoryLabel()
+        setsScoreLbl.text = viewModel.getSetsScoreLabel()
+        gameScoreLbl.text = viewModel.getGameScoreLabel()
+        nextGameLbl.titleLabel?.text = viewModel.getNextGameButtonLabel()
+        setsHistoryLbl.text = viewModel.getSetsHistoryLabel()
     }
 
     @IBAction func nextGameBtn(_ sender: UIButton) {
-//        dismiss(animated: true, completion: nil)
         navigationController?.popViewController(animated: true)
     }
 }

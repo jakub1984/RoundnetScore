@@ -102,19 +102,6 @@ class GameViewController: UIViewController {
 
     private func setPlayerBackgrounds() {
         clearAllReceiversBackground()
-        switch currentReceiver {
-        case players[1]:
-            serverHomeAView.backgroundColor = .yellow
-        case players[2]:
-            serverAwayAView.backgroundColor = .yellow
-        case players[3]:
-            serverHomeBView.backgroundColor = .yellow
-        case players[4]:
-            serverAwayBView.backgroundColor = .yellow
-        default:
-            break
-        }
-
         switch currentServer {
         case players[1]:
             serverHomeAView.backgroundColor = .lightGray
@@ -127,9 +114,23 @@ class GameViewController: UIViewController {
         default:
             serveIndicatorView.isHidden = true
         }
+
+        switch currentReceiver {
+        case players[1]:
+            serverHomeAView.backgroundColor = .yellow
+        case players[2]:
+            serverAwayAView.backgroundColor = .yellow
+        case players[3]:
+            serverHomeBView.backgroundColor = .yellow
+        case players[4]:
+            serverAwayBView.backgroundColor = .yellow
+        default:
+            break
+        }
     }
 
     private func getReceiver() {
+
         switch currentServer {
         case players[0]:
             currentReceiver = players[0]
