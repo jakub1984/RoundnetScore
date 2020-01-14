@@ -107,19 +107,6 @@ class GameViewController: UIViewController {
         clearAllReceiversBackground()
         switch currentServer {
         case players[1]:
-            serverHomeAView.backgroundColor = .lightGray
-        case players[2]:
-            serverAwayAView.backgroundColor = .lightGray
-        case players[3]:
-            serverHomeBView.backgroundColor = .lightGray
-        case players[4]:
-            serverAwayBView.backgroundColor = .lightGray
-        default:
-            serveIndicatorView.isHidden = true
-        }
-
-        switch currentReceiver {
-        case players[1]:
             serverHomeAView.backgroundColor = .yellow
         case players[2]:
             serverAwayAView.backgroundColor = .yellow
@@ -127,6 +114,20 @@ class GameViewController: UIViewController {
             serverHomeBView.backgroundColor = .yellow
         case players[4]:
             serverAwayBView.backgroundColor = .yellow
+
+        default:
+            serveIndicatorView.isHidden = true
+        }
+
+        switch currentReceiver {
+        case players[1]:
+            serverHomeAView.backgroundColor = .lightGray
+        case players[2]:
+            serverAwayAView.backgroundColor = .lightGray
+        case players[3]:
+            serverHomeBView.backgroundColor = .lightGray
+        case players[4]:
+            serverAwayBView.backgroundColor = .lightGray
         default:
             break
         }
@@ -156,6 +157,24 @@ class GameViewController: UIViewController {
             currentReceiver = currentReceiver == players[1] ? players[3] : players[1]
         case .away:
             currentReceiver = currentReceiver == players[2] ? players[4] : players[2]
+        default:
+            break
+        }
+    }
+
+    private func rotateServers() {
+        let destinationHomeA = serverHomeAView.convert(serverHomeAView.center, to: serverHomeAView)
+        let destinationHomeB = serverHomeBView.convert(serverHomeBView.center, to: serverHomeBView)
+        let destinationAwayA = serverAwayAView.convert(serverAwayAView.center, to: serverAwayAView)
+        let destinationAwayB = serverAwayBView.convert(serverAwayBView.center, to: serverAwayBView)
+
+        switch currentServer.team {
+        case .home:
+            serverHomeAView.move(to: destinationHomeB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 1, options: .curveEaseInOut)
+            serverHomeBView.move(to: destinationHomeA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 1, options: .curveEaseInOut)
+        case .away:
+            serverAwayAView.move(to: destinationAwayB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 1, options: .curveEaseInOut)
+            serverAwayBView.move(to: destinationAwayA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 1, options: .curveEaseInOut)
         default:
             break
         }
@@ -241,6 +260,7 @@ class GameViewController: UIViewController {
 
             } else {
                 switchTeamReceiver()
+                rotateServers()
                 print("Serve stays with player \(String(describing: currentServer.id))")
             }
         }
