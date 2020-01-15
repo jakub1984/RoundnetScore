@@ -91,18 +91,6 @@ class GameViewController: UIViewController {
         updateNewGameUI()
     }
 
-//    Player(team: .noTeam, position: .NO),
-//    Player(team: .home, position: .A),
-//    Player(team: .away, position: .A),
-//    Player(team: .home, position: .B),
-//    Player(team: .away, position: .B)
-
-//    @IBOutlet weak var serveIndicatorView: UIImageView!
-//    @IBOutlet weak var serverHomeAView: UIView!
-//    @IBOutlet weak var serverHomeBView: UIView!
-//    @IBOutlet weak var serverAwayAView: UIView!
-//    @IBOutlet weak var serverAwayBView: UIView!
-
     private func setPlayerBackgrounds() {
         clearAllReceiversBackground()
         switch currentServer {
@@ -114,9 +102,8 @@ class GameViewController: UIViewController {
             serverHomeBView.backgroundColor = .yellow
         case players[4]:
             serverAwayBView.backgroundColor = .yellow
-
         default:
-            serveIndicatorView.isHidden = true
+            break
         }
 
         switch currentReceiver {
@@ -170,11 +157,11 @@ class GameViewController: UIViewController {
 
         switch currentServer.team {
         case .home:
-            serverHomeAView.move(to: destinationHomeB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 1, options: .curveEaseInOut)
-            serverHomeBView.move(to: destinationHomeA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 1, options: .curveEaseInOut)
+            serverHomeAView.move(to: destinationHomeB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+            serverHomeBView.move(to: destinationHomeA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
         case .away:
-            serverAwayAView.move(to: destinationAwayB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 1, options: .curveEaseInOut)
-            serverAwayBView.move(to: destinationAwayA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 1, options: .curveEaseInOut)
+            serverAwayAView.move(to: destinationAwayB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+            serverAwayBView.move(to: destinationAwayA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
         default:
             break
         }
@@ -309,7 +296,7 @@ class GameViewController: UIViewController {
     }
 
     private func saveFinalScore() {
-        let finalScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer, receivingPlayer: currentReceiver)
+        let finalScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer, currentReceiver: currentReceiver)
         setsHistory.append(finalScore)
     }
 
@@ -353,15 +340,9 @@ class GameViewController: UIViewController {
     }
 
     private func saveScoreToHistory() {
-        let currentScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer, receivingPlayer: currentReceiver)
+        let currentScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer, currentReceiver: currentReceiver)
         scoreHistory.append(currentScore)
         print("Last score saved \(String(describing: scoreHistory.last))")
-    }
-
-    private func removeScore() {
-        if !scoreHistory.isEmpty {
-            scoreHistory.removeLast()
-        }
     }
 
     //    MARK: Scoring Actions
@@ -398,33 +379,25 @@ class GameViewController: UIViewController {
     }
 
     @IBAction func homeDidRemove(_ sender: UIButton) {
-        if homeScore == 0 && awayScore == 0 {
-            removeScore()
+        guard !scoreHistory.isEmpty else { return }
+        scoreHistory.removeLast()
+        if scoreHistory.isEmpty {
             self.currentServer = players[0]
-            clearAllReceiversBackground()
-        }
-
-        if homeScore > 0 {
-            homeScore -= 1
+            self.currentReceiver = players[0]
+        } else {
+            guard let lastScore = scoreHistory.last else { return }
+            homeScore = lastScore.home
+            awayScore = lastScore.away
             homeScoreLbl.text = getScore(team: homeScore)
-            removeScore()
-            previousServer()
+            awayScoreLbl.text = getScore(team: awayScore)
+            currentServer = lastScore.scoringPlayer ?? players[0]
+            currentReceiver = lastScore.receivingPlayer ?? players[0]
         }
+        setPlayerBackgrounds()
     }
 
     @IBAction func awayDidRemove(_ sender: UIButton) {
-        if homeScore == 0 && awayScore == 0 {
-            removeScore()
-            self.currentServer = players[0]
-            clearAllReceiversBackground()
-        }
 
-        if awayScore > 0 {
-            awayScore -= 1
-            awayScoreLbl.text = getScore(team: awayScore)
-            removeScore()
-            previousServer()
-        }
     }
 
     @IBAction func didPressRestart(_ sender: UIBarButtonItem) {

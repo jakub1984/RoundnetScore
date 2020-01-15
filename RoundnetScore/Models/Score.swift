@@ -14,10 +14,10 @@ struct Score {
     let scoringPlayer: Player?
     let receivingPlayer: Player?
 
-    init(home: Int, away: Int, scoringPlayer: Player? = nil, receivingPlayer: Player? = nil) {
+    init(home: Int, away: Int, scoringPlayer: Player? = nil, currentReceiver: Player? = nil) {
         self.home = home
         self.away = away
         self.scoringPlayer = scoringPlayer
-        self.receivingPlayer = receivingPlayer
+        self.receivingPlayer = currentReceiver
     }
 }
