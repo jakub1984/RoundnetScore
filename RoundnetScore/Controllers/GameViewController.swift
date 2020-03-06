@@ -253,6 +253,31 @@ class GameViewController: UIViewController {
         }
     }
 
+    private func previousServe() {
+        guard !scoreHistory.isEmpty else { return }
+
+            let previousScore = scoreHistory[scoreHistory.count - 1]
+            let previousHomeScore = previousScore.home
+            let previousAwayScore = previousScore.away
+
+            if homeScore > previousHomeScore && currentServer.team == .away {
+//                nextServer()
+//                getReceiver()
+                print("Serve changed to \(String(describing: currentServer.id))")
+
+            } else if awayScore > previousAwayScore && currentServer.team == .home {
+//                nextServer()
+//                getReceiver()
+//                print("Serve changed to \(String(describing: currentServer.id))")
+
+            } else {
+//                switchTeamReceiver()
+                rotateServers()
+                print("Serve stays with player \(String(describing: currentServer.id))")
+            }
+
+    }
+
     private func nextServer() {
         let currentServer = self.currentServer.id
         let nextId = currentServer + 1
@@ -272,7 +297,6 @@ class GameViewController: UIViewController {
         }
 
         setPlayerBackgrounds()
-        print("Previous Server mr: \(String(describing: self.currentServer.id))")
     }
 
     private func claculateWinner() {
@@ -379,6 +403,7 @@ class GameViewController: UIViewController {
     }
 
     @IBAction func homeDidRemove(_ sender: UIButton) {
+        previousServe()
         guard !scoreHistory.isEmpty else { return }
         scoreHistory.removeLast()
         if scoreHistory.isEmpty {
@@ -393,6 +418,8 @@ class GameViewController: UIViewController {
             currentServer = lastScore.scoringPlayer ?? players[0]
             currentReceiver = lastScore.receivingPlayer ?? players[0]
         }
+//        TODO: fix rotating users when remove the score
+
         setPlayerBackgrounds()
     }
 
