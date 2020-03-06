@@ -40,7 +40,7 @@ struct Player: Equatable {
         self.id = self.getPlayerId(team: team, position: position)
     }
 
-    func getPlayerId(team: Team, position: Position) -> Int {
+    private func getPlayerId(team: Team, position: Position) -> Int {
         switch (team, position) {
         case (.home, .A): return 1
         case (.away, .A): return 2

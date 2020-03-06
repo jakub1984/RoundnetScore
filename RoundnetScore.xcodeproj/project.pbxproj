@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F80097E124130111006B0FC1 /* ScoresDoublyLinkedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80097E024130111006B0FC1 /* ScoresDoublyLinkedList.swift */; };
 		F839E94923B696E0005657B3 /* UIView+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F839E94823B696E0005657B3 /* UIView+Animations.swift */; };
 		F839E94C23B75657005657B3 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = F839E94B23B75656005657B3 /* Player.swift */; };
 		F839E94F23B8F5B4005657B3 /* ResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F839E94E23B8F5B3005657B3 /* ResultViewModel.swift */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F80097E024130111006B0FC1 /* ScoresDoublyLinkedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresDoublyLinkedList.swift; sourceTree = "<group>"; };
 		F839E94823B696E0005657B3 /* UIView+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Animations.swift"; sourceTree = "<group>"; };
 		F839E94B23B75656005657B3 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		F839E94E23B8F5B3005657B3 /* ResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewModel.swift; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 			children = (
 				F839E94B23B75656005657B3 /* Player.swift */,
 				F839E95023B8FA3F005657B3 /* Score.swift */,
+				F80097E024130111006B0FC1 /* ScoresDoublyLinkedList.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -260,6 +263,7 @@
 				F8F1A4BE23B5341200E28F91 /* RoundnetScore.xcdatamodeld in Sources */,
 				F8F1A4B423B5341200E28F91 /* AppDelegate.swift in Sources */,
 				F839E94F23B8F5B4005657B3 /* ResultViewModel.swift in Sources */,
+				F80097E124130111006B0FC1 /* ScoresDoublyLinkedList.swift in Sources */,
 				F8F1A4B623B5341200E28F91 /* SceneDelegate.swift in Sources */,
 				F839E94C23B75657005657B3 /* Player.swift in Sources */,
 				F8CB47A523B61C810039AD50 /* ResultViewController.swift in Sources */,
