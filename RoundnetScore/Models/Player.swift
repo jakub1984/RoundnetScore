@@ -28,7 +28,7 @@ enum Position: CaseIterable {
     case NO
 }
 
-struct Player: Equatable {
+public struct Player: Equatable {
     var isServing: Bool = false
     let team: Team
     let position: Position
@@ -50,7 +50,7 @@ struct Player: Equatable {
         }
     }
 
-    static func ==(lhs: Player, rhs: Player) -> Bool {
+    public static func ==(lhs: Player, rhs: Player) -> Bool {
         return lhs.id == rhs.id
     }
 
