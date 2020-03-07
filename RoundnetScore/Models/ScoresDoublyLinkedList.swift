@@ -8,12 +8,12 @@
 
 import Foundation
 
-class ScoresDoublyLinkedList<T>: CustomStringConvertible {
-    private var head: Score<T>? = nil
-    private var tail: Score<T>? = nil
+class ScoresDoublyLinkedList<Player>: CustomStringConvertible {
+    private var head: Score<Player>? = nil
+    private var tail: Score<Player>? = nil
 
-    public var first: T? { head?.value }
-    public var last: T? { tail?.value }
+    public var first: Player? { head?.scoringPlayer }
+    public var last: Player? { tail?.scoringPlayer }
     public var isEmpty: Bool { head == nil }
 
     var description: String {
@@ -36,25 +36,25 @@ class ScoresDoublyLinkedList<T>: CustomStringConvertible {
 //    }
 
 //    Get all values in forward direction
-    public var forwardValues: [T]? {
+    public var forwardValues: [Player]? {
         if isEmpty { return nil }
-        var values: [T] = []
+        var values: [Player] = []
         var currentNode = head
         while currentNode != nil {
-            values.append(currentNode!.value)
+            values.append(currentNode!.scoringPlayer!)
             currentNode = currentNode?.next
         }
 
         return values
     }
 
-    public var backwardValues: [T]? {
+    public var backwardValues: [Player]? {
         guard let tailNode = tail else { return nil }
 
-        var values: [T] = []
+        var values: [Player] = []
         var previousNode = tailNode
         repeat {
-            values.append(previousNode.value)
+            values.append(previousNode.scoringPlayer!)
             if let previous = previousNode.previous {
                 previousNode = previous
             }
