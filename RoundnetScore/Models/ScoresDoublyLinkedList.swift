@@ -41,7 +41,7 @@ class ScoresDoublyLinkedList<Player>: CustomStringConvertible {
         var values: [Player] = []
         var currentNode = head
         while currentNode != nil {
-            values.append(currentNode!.scoringPlayer!)
+            values.append(currentNode!.scoringPlayer)
             currentNode = currentNode?.next
         }
 
@@ -54,7 +54,7 @@ class ScoresDoublyLinkedList<Player>: CustomStringConvertible {
         var values: [Player] = []
         var previousNode = tailNode
         repeat {
-            values.append(previousNode.scoringPlayer!)
+            values.append(previousNode.scoringPlayer)
             if let previous = previousNode.previous {
                 previousNode = previous
             }
