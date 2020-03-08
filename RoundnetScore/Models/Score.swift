@@ -8,25 +8,25 @@
 
 import Foundation
 
-class Score<Point>: CustomStringConvertible, Equatable {
+class Score: CustomStringConvertible, Equatable {
 
     let value: Point
 
-    var next: Score<Point>?
-    weak var previous: Score<Point>?
+    var next: Score?
+    weak var previous: Score?
 
     var description: String {
         guard let next = next else { return "\(value)"}
         return "\(value) -> " + String(describing: next)
     }
 
-    init(_ value: Point, prev: Score<Point>?, next: Score<Point>?) {
+    init(_ value: Point, prev: Score?, next: Score?) {
         self.value = value
         self.previous = prev
         self.next = next
     }
 
-    static func == (lhs: Score<Point>, rhs: Score<Point>) -> Bool {
+    static func == (lhs: Score, rhs: Score) -> Bool {
         lhs.next == rhs.next
     }
 }

@@ -8,9 +8,9 @@
 
 import Foundation
 
-class ScoresDoublyLinkedList<Point>: CustomStringConvertible {
-    private var head: Score<Point>? = nil
-    private var tail: Score<Point>? = nil
+class ScoresDoublyLinkedList: CustomStringConvertible {
+    private var head: Score? = nil
+    private var tail: Score? = nil
 
     public var isEmpty: Bool { head == nil }
 
@@ -29,9 +29,31 @@ class ScoresDoublyLinkedList<Point>: CustomStringConvertible {
         tail = nil
     }
 
-//    subscript(index: Int) -> Score<Point>? {
-//        node(at: index)
-//    }
+    public func append(_ value: Point) {
+        let newPoint = Score(value, prev: nil, next: nil)
+        if let tail = tail {
+            newPoint.previous = tail
+            tail.next = newPoint
+        } else {
+            head = newPoint
+        }
+        tail = newPoint
+    }
+
+    @discardableResult
+    public func deleteLast() -> Point? {
+        guard var tailNode = tail, var headNode = head else { return nil }
+        defer {
+            if tailNode == headNode {
+                tail = nil
+                head = nil
+            } else if let prev = tailNode.previous {
+                tail = prev
+                tail?.next = nil
+            }
+        }
+        return tailNode.value
+    }
 
 //    Get all values in forward direction
     public var forwardValues: [Point]? {
@@ -60,12 +82,34 @@ class ScoresDoublyLinkedList<Point>: CustomStringConvertible {
         return values
     }
 
-//    public func score(_ value: T) {
-//        let newScore = Score(
-//
-//    }
+//    Get a score from a specific position
+    func node(at index: Int) -> Score? {
+        if isEmpty { return nil }
+        if index >= 0 {
+            var currentNode = head
+            var currentIndex = 0
+            while currentNode != nil && currentIndex < index {
+                currentNode = currentNode?.next
+                currentIndex += 1
+            }
+            return currentNode
+        }
+        return nil
+    }
 
+//    Access a node using subscript operation
+    subscript(index: Int) -> Score? {
+        node(at: index)
+    }
 
-
-
+//    Get number of scores
+    func count() -> Int {
+        var currentNode = head
+        var scoreCount = 0
+        while currentNode != nil {
+            scoreCount += 1
+            currentNode = currentNode?.next
+        }
+        return scoreCount
+    }
 }
