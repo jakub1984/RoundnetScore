@@ -37,11 +37,11 @@ public struct Point: Equatable {
     let scoringPlayer: Player?
     let currentReceiver: Player?
 
-    init(home: Int, away: Int, scoringPlayer: Player? = nil, receivingPlayer: Player? = nil) {
+    init(home: Int, away: Int, scoringPlayer: Player? = nil, currentReceiver: Player? = nil) {
         self.home = home
         self.away = away
         self.scoringPlayer = scoringPlayer
-        self.currentReceiver = receivingPlayer
+        self.currentReceiver = currentReceiver
     }
 
     public static func == (lhs: Point, rhs: Point) -> Bool {

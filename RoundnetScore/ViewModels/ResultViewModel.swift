@@ -10,7 +10,7 @@ import Foundation
 
 class ResultViewModel {
     let server: Player
-    let sets: [Score]
+    let sets: [Point]
 
     let winningTeam: Team
     let winningScore: String
@@ -18,7 +18,7 @@ class ResultViewModel {
     var homeSets: Int = 0
     var awaySets: Int = 0
 
-    init(server: Player, sets: [Score], final: Bool = false) {
+    init(server: Player, sets: [Point], final: Bool = false) {
         self.server = server
         self.sets = sets
 

@@ -10,7 +10,7 @@ import Foundation
 
 class GameViewModel {
 
-    var scoreHistory: [Score] = []
+    var scoreHistory: [Point] = []
     var server: Player = Player(team: .noTeam, position: .NO)
 
 }

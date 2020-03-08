@@ -49,8 +49,9 @@ class GameViewController: UIViewController {
     private var awayScore: Int = 0
     private var awaySets: Int = 0
 
-    private var setsHistory: [Score] = []
-    private var scoreHistory: [Score] = []
+    private var setsHistory: [Point] = []
+    private var scoreHistory: [Point] = []
+    private var scores = ScoresDoublyLinkedList()
 
     private var currentServer: Player = Player(team: .noTeam, position: .NO)
     private var currentReceiver: Player = Player(team: .noTeam, position: .NO)
@@ -58,6 +59,7 @@ class GameViewController: UIViewController {
     var maxScore: Int = 15
     var maxSets: Int = 3
     var startingTeam: Team = .noTeam
+// TODO: remove hardCap
     var hardCap: Int? = nil
 
 //    convenience init() {
@@ -89,6 +91,7 @@ class GameViewController: UIViewController {
 
     private func newGame() {
         updateNewGameUI()
+        scores.deleteAll()
     }
 
     private func setPlayerBackgrounds() {
@@ -288,7 +291,7 @@ class GameViewController: UIViewController {
     private func previousServer() {
         let lastScore = scoreHistory.last
 
-        if let lastServer = lastScore?.scoringPlayer, let lastReceiver = lastScore?.receivingPlayer {
+        if let lastServer = lastScore?.scoringPlayer, let lastReceiver = lastScore?.currentReceiver {
             self.currentServer = lastServer
             self.currentReceiver = lastReceiver
         } else {
@@ -320,7 +323,7 @@ class GameViewController: UIViewController {
     }
 
     private func saveFinalScore() {
-        let finalScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer, currentReceiver: currentReceiver)
+        let finalScore = Point(home: homeScore, away: awayScore, scoringPlayer: currentServer, currentReceiver: currentReceiver)
         setsHistory.append(finalScore)
     }
 
@@ -364,8 +367,9 @@ class GameViewController: UIViewController {
     }
 
     private func saveScoreToHistory() {
-        let currentScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer, currentReceiver: currentReceiver)
+        let currentScore = Point(home: homeScore, away: awayScore, scoringPlayer: currentServer, currentReceiver: currentReceiver)
         scoreHistory.append(currentScore)
+        scores.append(currentScore)
         print("Last score saved \(String(describing: scoreHistory.last))")
     }
 
@@ -416,7 +420,7 @@ class GameViewController: UIViewController {
             homeScoreLbl.text = getScore(team: homeScore)
             awayScoreLbl.text = getScore(team: awayScore)
             currentServer = lastScore.scoringPlayer ?? players[0]
-            currentReceiver = lastScore.receivingPlayer ?? players[0]
+            currentReceiver = lastScore.currentReceiver ?? players[0]
         }
 //        TODO: fix rotating users when remove the score
 
