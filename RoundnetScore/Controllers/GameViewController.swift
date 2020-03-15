@@ -24,9 +24,6 @@ class GameViewController: UIViewController {
     @IBOutlet weak var serverAwayAView: UIView!
     @IBOutlet weak var serverAwayBView: UIView!
 
-
-    
-
     static let green = UIColor(red: 6, green: 195, blue: 146, alpha: 1)
     static let blue = UIColor(red: 3, green: 27, blue: 62, alpha: 1)
     static let red = UIColor(red: 218, green: 65, blue: 101, alpha: 1)
@@ -192,10 +189,11 @@ class GameViewController: UIViewController {
 
         updateSets()
 
-//        TODO: prověřit že se chová podle pravidel
+//        TODO: prověřit že se chová podle pravidel, servera tady nemusím nastavovat
         updateServer()
 
         self.scoreHistory = []
+        self.scores.deleteAll()
 
         self.homeScoreLbl.text = getScore(team: homeScore)
         self.awayScoreLbl.text = getScore(team: awayScore)
@@ -221,45 +219,47 @@ class GameViewController: UIViewController {
 
         setsHistory.forEach { score in
             if score.home > score.away {
-                homeSets += homeSets
+                homeSets += 1
             } else {
-                awaySets += awaySets
+                awaySets += 1
             }
         }
     }
 
     private func calculateServe() {
-        if scoreHistory.isEmpty {
+        guard let previousScore = scores.tail?.value else {
             currentServer = players[0]
             currentReceiver = players[0]
             clearAllReceiversBackground()
+            return
+        }
+
+        let previousHomeScore = previousScore.home
+        let previousAwayScore = previousScore.away
+
+        if homeScore > previousHomeScore && currentServer.team == .away {
+            nextServer()
+            getReceiver()
+            print("Serve changed to \(String(describing: currentServer.id))")
+
+        } else if awayScore > previousAwayScore && currentServer.team == .home {
+            nextServer()
+            getReceiver()
+            print("Serve changed to \(String(describing: currentServer.id))")
+
         } else {
-            let previousScore = scoreHistory[scoreHistory.count - 1]
-            let previousHomeScore = previousScore.home
-            let previousAwayScore = previousScore.away
-
-            if homeScore > previousHomeScore && currentServer.team == .away {
-                nextServer()
-                getReceiver()
-                print("Serve changed to \(String(describing: currentServer.id))")
-
-            } else if awayScore > previousAwayScore && currentServer.team == .home {
-                nextServer()
-                getReceiver()
-                print("Serve changed to \(String(describing: currentServer.id))")
-
-            } else {
-                switchTeamReceiver()
-                rotateServers()
-                print("Serve stays with player \(String(describing: currentServer.id))")
-            }
+            switchTeamReceiver()
+            rotateServers()
+            print("Serve stays with player \(String(describing: currentServer.id))")
         }
     }
 
     private func previousServe() {
-        guard !scoreHistory.isEmpty else { return }
+//        guard !scoreHistory.isEmpty else { return }
+//        guard !scores.isEmpty else { return }
+//        let previousScore = scoreHistory[scoreHistory.count - 1]
 
-            let previousScore = scoreHistory[scoreHistory.count - 1]
+        guard let previousScore = scores.tail?.value else { return }
             let previousHomeScore = previousScore.home
             let previousAwayScore = previousScore.away
 
@@ -282,16 +282,17 @@ class GameViewController: UIViewController {
     }
 
     private func nextServer() {
-        let currentServer = self.currentServer.id
-        let nextId = currentServer + 1
+        let currentServerId = self.currentServer.id
+        let nextId = currentServerId + 1
         let nextServer = nextId == players.count ? players[1] : players[nextId]
         self.currentServer = nextServer
     }
 
     private func previousServer() {
-        let lastScore = scoreHistory.last
+//        let lastScore = scoreHistory.last
+        let lastScore = scores.tail
 
-        if let lastServer = lastScore?.scoringPlayer, let lastReceiver = lastScore?.currentReceiver {
+        if let lastServer = lastScore?.value.currentReceiver, let lastReceiver = lastScore?.value.currentReceiver {
             self.currentServer = lastServer
             self.currentReceiver = lastReceiver
         } else {
@@ -368,14 +369,16 @@ class GameViewController: UIViewController {
 
     private func saveScoreToHistory() {
         let currentScore = Point(home: homeScore, away: awayScore, scoringPlayer: currentServer, currentReceiver: currentReceiver)
-        scoreHistory.append(currentScore)
+//        scoreHistory.append(currentScore)
         scores.append(currentScore)
+        print("LinkedList \(String(describing: scores))")
+
         print("Last score saved \(String(describing: scoreHistory.last))")
     }
 
     //    MARK: Scoring Actions
     @IBAction func homeDidScore(_ sender: UIButton) {
-        if self.scoreHistory.isEmpty {
+        if scores.tail == nil {
             currentServer = players[1]
 //            serveIndicatorView.isHidden = false
             currentReceiver = players[4]
@@ -391,7 +394,7 @@ class GameViewController: UIViewController {
     }
 
     @IBAction func awayDidScore(_ sender: UIButton) {
-        if self.scoreHistory.isEmpty {
+        if scores.tail == nil {
             currentServer = players[2]
             currentReceiver = players[3]
 //            serveIndicatorView.isHidden = false
@@ -408,13 +411,13 @@ class GameViewController: UIViewController {
 
     @IBAction func homeDidRemove(_ sender: UIButton) {
         previousServe()
-        guard !scoreHistory.isEmpty else { return }
-        scoreHistory.removeLast()
-        if scoreHistory.isEmpty {
+        guard scores.tail != nil else { return }
+        scores.deleteLast()
+        if scores.tail == nil {
             self.currentServer = players[0]
             self.currentReceiver = players[0]
         } else {
-            guard let lastScore = scoreHistory.last else { return }
+            guard let lastScore = scores.tail?.value else { return }
             homeScore = lastScore.home
             awayScore = lastScore.away
             homeScoreLbl.text = getScore(team: homeScore)

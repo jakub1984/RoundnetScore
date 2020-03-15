@@ -9,8 +9,8 @@
 import Foundation
 
 class ScoresDoublyLinkedList: CustomStringConvertible {
-    private var head: Score? = nil
-    private var tail: Score? = nil
+    public var head: Score? = nil
+    public var tail: Score? = nil
 
     public var isEmpty: Bool { head == nil }
 
