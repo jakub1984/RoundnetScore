@@ -53,11 +53,15 @@ class GameViewController: UIViewController {
     private var currentServer: Player = Player(team: .noTeam, position: .NO)
     private var currentReceiver: Player = Player(team: .noTeam, position: .NO)
 
+    private var isHomeSwitched: Bool = false
+    private var isAwaySwitched: Bool = false
+
     var maxScore: Int = 15
     var maxSets: Int = 3
     var startingTeam: Team = .noTeam
 // TODO: remove hardCap
     var hardCap: Int? = nil
+
 
 //    convenience init() {
 //        self.init()
@@ -122,17 +126,17 @@ class GameViewController: UIViewController {
 
     private func getReceiver() {
 
-        switch currentServer {
-        case players[0]:
+        switch (currentServer.team, currentServer.position) {
+        case (.noTeam, .NO) :
             currentReceiver = players[0]
-        case players[1]:
-            currentReceiver = players[4]
-        case players[2]:
-            currentReceiver = players[3]
-        case players[3]:
-            currentReceiver = players[2]
-        case players[4]:
-            currentReceiver = players[1]
+        case (.home, .A):
+            currentReceiver = isAwaySwitched ? players[2] : players[4]
+        case (.home, .B):
+            currentReceiver = isAwaySwitched ? players[4] : players[2]
+        case (.away, .A):
+            currentReceiver = isHomeSwitched ? players[1] : players[3]
+        case (.away, .B):
+            currentReceiver = isHomeSwitched ? players[3] : players[1]
         default:
             break
         }
@@ -142,8 +146,10 @@ class GameViewController: UIViewController {
         switch currentReceiver.team {
         case .home:
             currentReceiver = currentReceiver == players[1] ? players[3] : players[1]
+            isHomeSwitched = isHomeSwitched == true ? false : true
         case .away:
             currentReceiver = currentReceiver == players[2] ? players[4] : players[2]
+            isAwaySwitched = isAwaySwitched == true ? false : true
         default:
             break
         }
