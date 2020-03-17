@@ -125,12 +125,12 @@ class GameViewController: UIViewController {
     }
 
     private func getReceiver() {
-
+// Aby tohle fungovalo, tak by ještě musela přijít kontrola zda se druhý tým switchnul
         switch (currentServer.team, currentServer.position) {
         case (.noTeam, .NO) :
             currentReceiver = players[0]
         case (.home, .A):
-            currentReceiver = isAwaySwitched ? players[2] : players[4]
+            currentReceiver = isAwaySwitched  ? players[2] : players[4]
         case (.home, .B):
             currentReceiver = isAwaySwitched ? players[4] : players[2]
         case (.away, .A):
@@ -146,10 +146,10 @@ class GameViewController: UIViewController {
         switch currentReceiver.team {
         case .home:
             currentReceiver = currentReceiver == players[1] ? players[3] : players[1]
-            isHomeSwitched = isHomeSwitched == true ? false : true
+            isAwaySwitched = isAwaySwitched ? false : true
         case .away:
             currentReceiver = currentReceiver == players[2] ? players[4] : players[2]
-            isAwaySwitched = isAwaySwitched == true ? false : true
+            isHomeSwitched = isHomeSwitched ? false : true
         default:
             break
         }
