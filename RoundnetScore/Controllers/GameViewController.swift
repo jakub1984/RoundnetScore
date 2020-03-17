@@ -19,10 +19,10 @@ class GameViewController: UIViewController {
 
     @IBOutlet weak var settingsView: UIView!
     @IBOutlet weak var serveIndicatorView: UIImageView!
-    @IBOutlet weak var serverHomeAView: UIView!
-    @IBOutlet weak var serverHomeBView: UIView!
-    @IBOutlet weak var serverAwayAView: UIView!
-    @IBOutlet weak var serverAwayBView: UIView!
+    @IBOutlet weak var positionAView: UIView!
+    @IBOutlet weak var positionCView: UIView!
+    @IBOutlet weak var positionBView: UIView!
+    @IBOutlet weak var positionDView: UIView!
 
     static let green = UIColor(red: 6, green: 195, blue: 146, alpha: 1)
     static let blue = UIColor(red: 3, green: 27, blue: 62, alpha: 1)
@@ -99,26 +99,26 @@ class GameViewController: UIViewController {
         clearAllReceiversBackground()
         switch currentServer {
         case players[1]:
-            serverHomeAView.backgroundColor = .yellow
+            positionAView.backgroundColor = .yellow
         case players[2]:
-            serverAwayAView.backgroundColor = .yellow
+            positionBView.backgroundColor = .yellow
         case players[3]:
-            serverHomeBView.backgroundColor = .yellow
+            positionCView.backgroundColor = .yellow
         case players[4]:
-            serverAwayBView.backgroundColor = .yellow
+            positionDView.backgroundColor = .yellow
         default:
             break
         }
 
         switch currentReceiver {
         case players[1]:
-            serverHomeAView.backgroundColor = .lightGray
+            positionAView.backgroundColor = .lightGray
         case players[2]:
-            serverAwayAView.backgroundColor = .lightGray
+            positionBView.backgroundColor = .lightGray
         case players[3]:
-            serverHomeBView.backgroundColor = .lightGray
+            positionCView.backgroundColor = .lightGray
         case players[4]:
-            serverAwayBView.backgroundColor = .lightGray
+            positionDView.backgroundColor = .lightGray
         default:
             break
         }
@@ -153,28 +153,28 @@ class GameViewController: UIViewController {
     }
 
     private func rotateServers() {
-        let destinationHomeA = serverHomeAView.convert(serverHomeAView.center, to: serverHomeAView)
-        let destinationHomeB = serverHomeBView.convert(serverHomeBView.center, to: serverHomeBView)
-        let destinationAwayA = serverAwayAView.convert(serverAwayAView.center, to: serverAwayAView)
-        let destinationAwayB = serverAwayBView.convert(serverAwayBView.center, to: serverAwayBView)
+        let destinationHomeA = positionAView.convert(positionAView.center, to: positionAView)
+        let destinationHomeB = positionCView.convert(positionCView.center, to: positionCView)
+        let destinationAwayA = positionBView.convert(positionBView.center, to: positionBView)
+        let destinationAwayB = positionDView.convert(positionDView.center, to: positionDView)
 
         switch currentServer.team {
         case .home:
-            serverHomeAView.move(to: destinationHomeB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
-            serverHomeBView.move(to: destinationHomeA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+            positionAView.move(to: destinationHomeB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+            positionCView.move(to: destinationHomeA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
         case .away:
-            serverAwayAView.move(to: destinationAwayB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
-            serverAwayBView.move(to: destinationAwayA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+            positionBView.move(to: destinationAwayB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+            positionDView.move(to: destinationAwayA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
         default:
             break
         }
     }
 
     private func clearAllReceiversBackground() {
-        serverHomeAView.backgroundColor = .white
-        serverHomeBView.backgroundColor = .white
-        serverAwayAView.backgroundColor = .white
-        serverAwayBView.backgroundColor = .white
+        positionAView.backgroundColor = .white
+        positionCView.backgroundColor = .white
+        positionBView.backgroundColor = .white
+        positionDView.backgroundColor = .white
     }
 
     private func nextSet() {
