@@ -9,5 +9,5 @@
 import Foundation
 
 class SettingsViewModel {
-    var server: Player = Player(team: .noTeam, position: .NO)
+    var server: Player = Player(position: .NO)
 }

@@ -25,28 +25,40 @@ enum Team: String, CaseIterable {
 enum Position: CaseIterable {
     case A
     case B
+    case C
+    case D
     case NO
 }
 
 public struct Player: Equatable {
-    var isServing: Bool = false
-    let team: Team
     let position: Position
+    var isServing: Bool = false
+    var team: Team = .noTeam
     var id: Int = 0
 
-    init(team: Team, position: Position) {
-        self.team = team
+    init(position: Position) {
         self.position = position
-        self.id = self.getPlayerId(team: team, position: position)
+        self.team = getTeam(position: self.position)
+        self.id = getPlayerId(position: self.position)
     }
 
-    private func getPlayerId(team: Team, position: Position) -> Int {
-        switch (team, position) {
-        case (.home, .A): return 1
-        case (.away, .A): return 2
-        case (.home, .B): return 3
-        case (.away, .B): return 4
-        default: return 0
+    private func getPlayerId(position: Position) -> Int {
+        switch position {
+        case .A: return 1
+        case .B: return 2
+        case .C: return 3
+        case .D: return 4
+        case .NO: return 0
+        }
+    }
+
+    private func getTeam(position: Position) -> Team {
+        switch position {
+        case .A: return .home
+        case .B: return .away
+        case .C: return .home
+        case .D: return .away
+        case .NO: return .noTeam
         }
     }
 

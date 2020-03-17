@@ -31,11 +31,11 @@ class GameViewController: UIViewController {
     static let yellow = UIColor(red: 250, green: 222, blue: 50, alpha: 1)
 
     private var players: [Player] = [
-        Player(team: .noTeam, position: .NO),
-        Player(team: .home, position: .A),
-        Player(team: .away, position: .A),
-        Player(team: .home, position: .B),
-        Player(team: .away, position: .B)
+        Player(position: .NO),
+        Player(position: .A),
+        Player(position: .B),
+        Player(position: .C),
+        Player(position: .D)
     ]
 
     var viewModel = GameViewModel()
@@ -50,8 +50,8 @@ class GameViewController: UIViewController {
     private var scoreHistory: [Point] = []
     private var scores = ScoresDoublyLinkedList()
 
-    private var currentServer: Player = Player(team: .noTeam, position: .NO)
-    private var currentReceiver: Player = Player(team: .noTeam, position: .NO)
+    private var currentServer: Player = Player(position: .NO)
+    private var currentReceiver: Player = Player(position: .NO)
 
     private var isHomeSwitched: Bool = false
     private var isAwaySwitched: Bool = false
@@ -125,20 +125,17 @@ class GameViewController: UIViewController {
     }
 
     private func getReceiver() {
-// Aby tohle fungovalo, tak by ještě musela přijít kontrola zda se druhý tým switchnul
-        switch (currentServer.team, currentServer.position) {
-        case (.noTeam, .NO) :
+        switch currentServer.position {
+        case .NO:
             currentReceiver = players[0]
-        case (.home, .A):
-            currentReceiver = isAwaySwitched  ? players[2] : players[4]
-        case (.home, .B):
-            currentReceiver = isAwaySwitched ? players[4] : players[2]
-        case (.away, .A):
+        case .A:
+            currentReceiver = isAwaySwitched ? players[2] : players[4]
+        case .B:
             currentReceiver = isHomeSwitched ? players[1] : players[3]
-        case (.away, .B):
+        case .C:
+            currentReceiver = isAwaySwitched ? players[4] : players[2]
+        case .D:
             currentReceiver = isHomeSwitched ? players[3] : players[1]
-        default:
-            break
         }
     }
 
