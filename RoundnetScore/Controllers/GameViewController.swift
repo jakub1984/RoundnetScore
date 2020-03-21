@@ -124,33 +124,48 @@ class GameViewController: UIViewController {
         }
     }
 
-    private func getReceiver() {
-        switch currentServer.position {
+    private func setCurrentReceiver() {
+        currentReceiver = getReceiver(serverPosition: currentServer.position)
+    }
+
+//    extrahovat do viewModelu
+    private func getReceiver(serverPosition: Position) -> Player {
+        switch serverPosition {
         case .NO:
-            currentReceiver = players[0]
+            return players[0]
         case .A:
-            currentReceiver = isAwaySwitched ? players[2] : players[4]
+            return getPlayerAtPosition(.D)
         case .B:
-            currentReceiver = isHomeSwitched ? players[1] : players[3]
+            return getPlayerAtPosition(.C)
         case .C:
-            currentReceiver = isAwaySwitched ? players[4] : players[2]
+            return getPlayerAtPosition(.B)
         case .D:
-            currentReceiver = isHomeSwitched ? players[3] : players[1]
+            return getPlayerAtPosition(.A)
         }
     }
 
-    private func switchTeamReceiver() {
-        switch currentReceiver.team {
-        case .home:
-            currentReceiver = currentReceiver == players[1] ? players[3] : players[1]
-            isAwaySwitched = isAwaySwitched ? false : true
-        case .away:
-            currentReceiver = currentReceiver == players[2] ? players[4] : players[2]
-            isHomeSwitched = isHomeSwitched ? false : true
-        default:
-            break
-        }
+    private func getPlayerAtPosition(_ position: Position) -> Player {
+//        players.forEach { player in
+//            if player.position == position { return player }
+//        }
+        print("currentServer \(currentServer)")
+
+
+        return players.filter { $0.position == position }.first ?? players[0]
     }
+
+//    private func switchTeamReceiver() {
+//        switch currentReceiver.team {
+//        case .home:
+//            currentReceiver = currentReceiver == players[1] ? players[3] : players[1]
+//            isAwaySwitched = isAwaySwitched ? false : true
+//        case .away:
+//            currentReceiver = currentReceiver == players[2] ? players[4] : players[2]
+//            isHomeSwitched = isHomeSwitched ? false : true
+//        default:
+//            break
+//        }
+//    }
 
     private func rotateServers() {
         let destinationHomeA = positionAView.convert(positionAView.center, to: positionAView)
@@ -168,6 +183,42 @@ class GameViewController: UIViewController {
         default:
             break
         }
+
+        switchServerPositions()
+    }
+
+    private func switchServerPositions() {
+        print("currentServer \(currentServer)")
+
+        switch currentServer.team {
+        case .home:
+            if players[1].position == .A {
+                players[1].position = .C
+                players[3].position = .A
+                isHomeSwitched = true
+            } else {
+                players[1].position = .A
+                players[3].position = .C
+                isHomeSwitched = false
+            }
+        case .away:
+            if players[2].position == .B {
+                players[2].position = .D
+                players[4].position = .B
+                isAwaySwitched = true
+            } else {
+                players[2].position = .B
+                players[4].position = .D
+                isAwaySwitched = false
+            }
+        case .noTeam:
+            players[1].position = .A
+            players[2].position = .B
+            players[3].position = .C
+            players[4].position = .D
+        }
+
+        currentServer = players[currentServer.id]
     }
 
     private func clearAllReceiversBackground() {
@@ -242,17 +293,18 @@ class GameViewController: UIViewController {
 
         if homeScore > previousHomeScore && currentServer.team == .away {
             nextServer()
-            getReceiver()
+            setCurrentReceiver()
             print("Serve changed to \(String(describing: currentServer.id))")
 
         } else if awayScore > previousAwayScore && currentServer.team == .home {
             nextServer()
-            getReceiver()
+            setCurrentReceiver()
             print("Serve changed to \(String(describing: currentServer.id))")
 
         } else {
-            switchTeamReceiver()
             rotateServers()
+            setCurrentReceiver()
+
             print("Serve stays with player \(String(describing: currentServer.id))")
         }
     }
@@ -372,11 +424,7 @@ class GameViewController: UIViewController {
 
     private func saveScoreToHistory() {
         let currentScore = Point(home: homeScore, away: awayScore, scoringPlayer: currentServer, currentReceiver: currentReceiver)
-//        scoreHistory.append(currentScore)
         scores.append(currentScore)
-        print("LinkedList \(String(describing: scores))")
-
-        print("Last score saved \(String(describing: scoreHistory.last))")
     }
 
     //    MARK: Scoring Actions

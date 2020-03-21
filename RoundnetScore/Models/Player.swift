@@ -31,7 +31,7 @@ enum Position: CaseIterable {
 }
 
 public struct Player: Equatable {
-    let position: Position
+    var position: Position
     var isServing: Bool = false
     var team: Team = .noTeam
     var id: Int = 0
