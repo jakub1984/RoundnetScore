@@ -38,6 +38,11 @@ class GameViewController: UIViewController {
         Player(position: .D)
     ]
 
+//    let destinationHomeA: CGPoint
+//    let destinationHomeB: CGPoint
+//    let destinationAwayA: CGPoint
+//    let destinationAwayB: CGPoint
+
     var viewModel = GameViewModel()
 
     private var homeScore: Int = 0
@@ -80,6 +85,20 @@ class GameViewController: UIViewController {
 //    required init?(coder: NSCoder) {
 //        fatalError("init(coder:) is not supported")
 //    }
+
+    init() {
+//        self.destinationHomeA = positionAView.convert(positionAView.center, to: positionAView)
+//        self.destinationHomeB = positionCView.convert(positionCView.center, to: positionCView)
+//        self.destinationAwayA = positionBView.convert(positionBView.center, to: positionBView)
+//        self.destinationAwayB = positionDView.convert(positionDView.center, to: positionDView)
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+
+        super.init(coder: coder)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -186,6 +205,17 @@ class GameViewController: UIViewController {
 
         switchServerPositions()
     }
+
+//    private func resetPlayersPosition() {
+//        if isHomeSwitched {
+//            positionAView.move(to: destinationHomeB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+//            positionCView.move(to: destinationHomeA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+//        } else {
+//            positionAView.move(to: destinationHomeB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+//            positionCView.move(to: destinationHomeA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+//
+//        }
+//    }
 
     private func switchServerPositions() {
         print("currentServer \(currentServer)")
@@ -462,7 +492,7 @@ class GameViewController: UIViewController {
 
     @IBAction func homeDidRemove(_ sender: UIButton) {
         previousServe()
-        guard scores.tail != nil else { return }
+//        guard scores.tail != nil else { return }
         scores.deleteLast()
         if scores.tail == nil {
             self.currentServer = players[0]
