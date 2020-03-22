@@ -37,11 +37,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         //            )
         //        }
 
+
                 let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
                 let viewController = storyboard.instantiateViewController(identifier: "GameViewController", creator: { coder in
         //            let settingsViewModel = SettingsViewModel()
                     let gameViewModel = 1
-                    let gameViewController = GameViewController(coder: coder, viewModel: gameViewModel)
+                    let gameViewController = GameViewController(coder: coder, viewModel: gameViewModel, persistenceManager: PersistenceManager.shared)
                     return gameViewController
                 })
         let navigationController = UINavigationController(rootViewController: viewController)
@@ -77,7 +78,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
 
         // Save changes in the application's managed object context when the application transitions to the background.
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+//        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
 

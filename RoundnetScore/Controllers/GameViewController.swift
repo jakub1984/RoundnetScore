@@ -43,7 +43,8 @@ class GameViewController: UIViewController {
 //    let destinationAwayA: CGPoint
 //    let destinationAwayB: CGPoint
 
-    let viewModel: Int
+    let viewModel: Int!
+    let persistenceManager: PersistenceManager!
 
     private var homeScore: Int = 0
     private var homeSets: Int = 0
@@ -85,17 +86,19 @@ class GameViewController: UIViewController {
 //        fatalError("init(coder:) is not supported")
 //    }
 
-    init?(coder: NSCoder, viewModel: Int) {
+    init?(coder: NSCoder, viewModel: Int, persistenceManager: PersistenceManager) {
 //        self.destinationHomeA = positionAView.convert(positionAView.center, to: positionAView)
 //        self.destinationHomeB = positionCView.convert(positionCView.center, to: positionCView)
 //        self.destinationAwayA = positionBView.convert(positionBView.center, to: positionBView)
 //        self.destinationAwayB = positionDView.convert(positionDView.center, to: positionDView)
         self.viewModel = viewModel
+        self.persistenceManager = persistenceManager
         super.init(coder: coder)
     }
 
     required init?(coder: NSCoder) {
         self.viewModel = 3
+        self.persistenceManager = nil
         super.init(coder: coder)
     }
 
