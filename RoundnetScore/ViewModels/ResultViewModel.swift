@@ -9,17 +9,60 @@
 import Foundation
 
 class ResultViewModel {
-    let winningTeam: Team
     let server: Player
-    let scores: [Score]
+    let sets: [Point]
+
+    let winningTeam: Team
     let winningScore: String
+    let maxSets: Int = 3
+    var homeSets: Int = 0
+    var awaySets: Int = 0
 
-    init(server: Player, scores: [Score]) {
+    init(server: Player, sets: [Point], final: Bool = false) {
         self.server = server
-        self.scores = scores
+        self.sets = sets
 
-        self.winningTeam = scores.last!.home > scores.last!.away ? .home : .away
-        self.winningScore = "\(scores.last!.home) : \(scores.last!.away)"
+        let homeScore = sets.last!.home
+        let awayScore = sets.last!.away
+        self.winningTeam = homeScore > awayScore ? .home : .away
+        self.winningScore = "\(homeScore) : \(awayScore)"
+        getSetsResult()
     }
 
+    private func getSetsResult() {
+        sets.forEach { score in
+            if score.home > score.away {
+                homeSets += 1
+            } else {
+                awaySets += 1
+            }
+        }
+    }
+
+    func getSetsScoreLabel() -> String {
+        if sets.count == maxSets {
+            return "GAME: \(homeSets):\(awaySets)"
+        } else {
+            return "SETS:"
+        }
+    }
+
+    func getGameScoreLabel() -> String {
+        return "\(sets.last?.home ?? 0):\(sets.last?.away ?? 0)"
+    }
+
+    func getNextGameButtonLabel() -> String {
+        return sets.count == maxSets ? "NEW GAME" : "NEXT SET"
+    }
+
+    func getSetsHistoryLabel() -> String {
+        if sets.count == 1 && maxSets == 1 {
+            return ""
+        } else {
+            let setsArray = sets.map {
+                "\($0.home):\($0.away)"
+            }
+            return setsArray.joined(separator: ", ")
+        }
+    }
 }

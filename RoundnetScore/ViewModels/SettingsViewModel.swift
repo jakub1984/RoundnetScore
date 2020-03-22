@@ -17,11 +17,11 @@ class SettingsViewModel {
     init() {
         self.numberOfSets = 3
         self.players = [
-            Player(team: .noTeam, position: .NO),
-            Player(team: .home, position: .A),
-            Player(team: .away, position: .A),
-            Player(team: .home, position: .B),
-            Player(team: .away, position: .B)
+            Player(position: .NO),
+            Player(position: .A),
+            Player(position: .A),
+            Player(position: .B),
+            Player(position: .B)
         ]
         self.numberOfPlayers = players.count - 1
         self.maxPoints = 15
@@ -30,17 +30,17 @@ class SettingsViewModel {
     private func setNumberOfPlayers(players: Int) {
         if players < 4 {
             self.players = [
-            Player(team: .noTeam, position: .NO),
-            Player(team: .home, position: .A),
-            Player(team: .away, position: .A)
+            Player(position: .NO),
+            Player(position: .A),
+            Player(position: .A)
             ]
         } else {
             self.players = [
-                Player(team: .noTeam, position: .NO),
-                Player(team: .home, position: .A),
-                Player(team: .away, position: .A),
-                Player(team: .home, position: .B),
-                Player(team: .away, position: .B)
+                Player(position: .NO),
+                Player(position: .A),
+                Player(position: .A),
+                Player(position: .B),
+                Player(position: .B)
             ]
         }
     }

@@ -11,6 +11,12 @@ import UIKit
 class ResultViewController: UIViewController {
 
     @IBOutlet weak var resultLbl: UILabel!
+    @IBOutlet weak var nextGameLbl: UIButton!
+    @IBOutlet weak var setsScoreLbl: UILabel!
+    @IBOutlet weak var gameScoreLbl: UILabel!
+    @IBOutlet weak var setsHistoryLbl: UILabel!
+
+    var viewModel: ResultViewModel
 
     var winner: Team = .noTeam
 
@@ -20,6 +26,7 @@ class ResultViewController: UIViewController {
 //    }
 
     init?(coder: NSCoder, result: ResultViewModel) {
+        self.viewModel = result
         self.winner = result.winningTeam
         super.init(coder: coder)
     }
@@ -35,14 +42,20 @@ class ResultViewController: UIViewController {
     func setup() {
         self.resultLbl.text = winner.wins
         if winner == .home {
-            view.backgroundColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
+            view.backgroundColor = #colorLiteral(red: 0.02352941176, green: 0.7647058824, blue: 0.5725490196, alpha: 1)
+            resultLbl.text = "HOME WINS"
         } else if winner == .away {
-            view.backgroundColor = #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1)
+            view.backgroundColor = #colorLiteral(red: 0.8549019608, green: 0.2549019608, blue: 0.3960784314, alpha: 1)
+            resultLbl.text = "AWAY WINS"
         }
+
+        setsScoreLbl.text = viewModel.getSetsScoreLabel()
+        gameScoreLbl.text = viewModel.getGameScoreLabel()
+        nextGameLbl.titleLabel?.text = viewModel.getNextGameButtonLabel()
+        setsHistoryLbl.text = viewModel.getSetsHistoryLabel()
     }
 
     @IBAction func nextGameBtn(_ sender: UIButton) {
-//        dismiss(animated: true, completion: nil)
         navigationController?.popViewController(animated: true)
     }
 }

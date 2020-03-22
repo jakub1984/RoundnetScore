@@ -10,8 +10,6 @@ import UIKit
 
 class GameViewController: UIViewController {
 
-    var viewModel: GameViewModel
-
     //    MARK: Outlets
     @IBOutlet weak var homeScoreLbl: UILabel!
     @IBOutlet weak var awayScoreLbl: UILabel!
@@ -21,10 +19,10 @@ class GameViewController: UIViewController {
 
     @IBOutlet weak var settingsView: UIView!
     @IBOutlet weak var serveIndicatorView: UIImageView!
-    @IBOutlet weak var serverHomeAView: UIView!
-    @IBOutlet weak var serverHomeBView: UIView!
-    @IBOutlet weak var serverAwayAView: UIView!
-    @IBOutlet weak var serverAwayBView: UIView!
+    @IBOutlet weak var positionAView: UIView!
+    @IBOutlet weak var positionCView: UIView!
+    @IBOutlet weak var positionBView: UIView!
+    @IBOutlet weak var positionDView: UIView!
 
     static let green = UIColor(red: 6, green: 195, blue: 146, alpha: 1)
     static let blue = UIColor(red: 3, green: 27, blue: 62, alpha: 1)
@@ -32,7 +30,20 @@ class GameViewController: UIViewController {
     static let white = UIColor(red: 241, green: 247, blue: 238, alpha: 1)
     static let yellow = UIColor(red: 250, green: 222, blue: 50, alpha: 1)
 
-    private var players: [Player]
+    private var players: [Player] = [
+        Player(position: .NO),
+        Player(position: .A),
+        Player(position: .B),
+        Player(position: .C),
+        Player(position: .D)
+    ]
+
+//    let destinationHomeA: CGPoint
+//    let destinationHomeB: CGPoint
+//    let destinationAwayA: CGPoint
+//    let destinationAwayB: CGPoint
+
+    var viewModel = GameViewModel()
 
     private var homeScore: Int = 0
     private var homeSets: Int = 0
@@ -40,36 +51,21 @@ class GameViewController: UIViewController {
     private var awayScore: Int = 0
     private var awaySets: Int = 0
 
-    private var serveHistory: [Int] = [0]
-    private var setsHistory: [Score] = []
-    private var scoreHistory: [Score] = []
+    private var setsHistory: [Point] = []
+    private var scoreHistory: [Point] = []
+    private var scores = ScoresDoublyLinkedList()
 
-    private var currentServer: Player
+    private var currentServer: Player = Player(position: .NO)
+    private var currentReceiver: Player = Player(position: .NO)
+
+    private var isHomeSwitched: Bool = false
+    private var isAwaySwitched: Bool = false
 
     var maxScore: Int = 15
     var maxSets: Int = 3
     var startingTeam: Team = .noTeam
-
-    private var currentSet: Int = 1
-
-
-//    init(viewModel: GameViewModel) {
-//        self.viewModel = viewModel
-//    }
-
-    init?(coder: NSCoder, viewModel: GameViewModel) {
-        self.viewModel = viewModel
-        self.players = viewModel.players
-        self.currentServer = viewModel.currentServer
-        
-        super.init(coder: coder)
-    }
-
-//    required init?(coder: NSCoder) {
-////        self.players = viewModel.players
-////        self.currentServer = viewModel.currentServer
-//        super.init(coder: coder)
-//    }
+// TODO: remove hardCap
+    var hardCap: Int? = nil
 
 
 //    convenience init() {
@@ -86,27 +82,202 @@ class GameViewController: UIViewController {
 ////        newGame()
 //    }
 //
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) is not supported")
+//    }
+
+    init() {
+//        self.destinationHomeA = positionAView.convert(positionAView.center, to: positionAView)
+//        self.destinationHomeB = positionCView.convert(positionCView.center, to: positionCView)
+//        self.destinationAwayA = positionBView.convert(positionBView.center, to: positionBView)
+//        self.destinationAwayB = positionDView.convert(positionDView.center, to: positionDView)
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) is not supported")
+
+        super.init(coder: coder)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        newGame()
+        newGame()
     }
 
-//    override func viewWillAppear(_ animated: Bool) {
-//        newGame()
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        nextSet()
+    }
 
     private func newGame() {
+        updateNewGameUI()
+        scores.deleteAll()
+    }
+
+    private func setPlayerBackgrounds() {
+        clearAllReceiversBackground()
+        switch currentServer {
+        case players[1]:
+            positionAView.backgroundColor = .yellow
+        case players[2]:
+            positionBView.backgroundColor = .yellow
+        case players[3]:
+            positionCView.backgroundColor = .yellow
+        case players[4]:
+            positionDView.backgroundColor = .yellow
+        default:
+            break
+        }
+
+        switch currentReceiver {
+        case players[1]:
+            positionAView.backgroundColor = .lightGray
+        case players[2]:
+            positionBView.backgroundColor = .lightGray
+        case players[3]:
+            positionCView.backgroundColor = .lightGray
+        case players[4]:
+            positionDView.backgroundColor = .lightGray
+        default:
+            break
+        }
+    }
+
+    private func setCurrentReceiver() {
+        currentReceiver = getReceiver(serverPosition: currentServer.position)
+    }
+
+//    extrahovat do viewModelu
+    private func getReceiver(serverPosition: Position) -> Player {
+        switch serverPosition {
+        case .NO:
+            return players[0]
+        case .A:
+            return getPlayerAtPosition(.D)
+        case .B:
+            return getPlayerAtPosition(.C)
+        case .C:
+            return getPlayerAtPosition(.B)
+        case .D:
+            return getPlayerAtPosition(.A)
+        }
+    }
+
+    private func getPlayerAtPosition(_ position: Position) -> Player {
+//        players.forEach { player in
+//            if player.position == position { return player }
+//        }
+        print("currentServer \(currentServer)")
+
+
+        return players.filter { $0.position == position }.first ?? players[0]
+    }
+
+//    private func switchTeamReceiver() {
+//        switch currentReceiver.team {
+//        case .home:
+//            currentReceiver = currentReceiver == players[1] ? players[3] : players[1]
+//            isAwaySwitched = isAwaySwitched ? false : true
+//        case .away:
+//            currentReceiver = currentReceiver == players[2] ? players[4] : players[2]
+//            isHomeSwitched = isHomeSwitched ? false : true
+//        default:
+//            break
+//        }
+//    }
+
+    private func rotateServers() {
+        let destinationHomeA = positionAView.convert(positionAView.center, to: positionAView)
+        let destinationHomeB = positionCView.convert(positionCView.center, to: positionCView)
+        let destinationAwayA = positionBView.convert(positionBView.center, to: positionBView)
+        let destinationAwayB = positionDView.convert(positionDView.center, to: positionDView)
+
+        switch currentServer.team {
+        case .home:
+            positionAView.move(to: destinationHomeB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+            positionCView.move(to: destinationHomeA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+        case .away:
+            positionBView.move(to: destinationAwayB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+            positionDView.move(to: destinationAwayA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+        default:
+            break
+        }
+
+        switchServerPositions()
+    }
+
+//    private func resetPlayersPosition() {
+//        if isHomeSwitched {
+//            positionAView.move(to: destinationHomeB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+//            positionCView.move(to: destinationHomeA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+//        } else {
+//            positionAView.move(to: destinationHomeB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+//            positionCView.move(to: destinationHomeA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+//
+//        }
+//    }
+
+    private func switchServerPositions() {
+        print("currentServer \(currentServer)")
+
+        switch currentServer.team {
+        case .home:
+            if players[1].position == .A {
+                players[1].position = .C
+                players[3].position = .A
+                isHomeSwitched = true
+            } else {
+                players[1].position = .A
+                players[3].position = .C
+                isHomeSwitched = false
+            }
+        case .away:
+            if players[2].position == .B {
+                players[2].position = .D
+                players[4].position = .B
+                isAwaySwitched = true
+            } else {
+                players[2].position = .B
+                players[4].position = .D
+                isAwaySwitched = false
+            }
+        case .noTeam:
+            players[1].position = .A
+            players[2].position = .B
+            players[3].position = .C
+            players[4].position = .D
+        }
+
+        currentServer = players[currentServer.id]
+    }
+
+    private func clearAllReceiversBackground() {
+        positionAView.backgroundColor = .white
+        positionCView.backgroundColor = .white
+        positionBView.backgroundColor = .white
+        positionDView.backgroundColor = .white
+    }
+
+    private func nextSet() {
+        guard !setsHistory.isEmpty else { return }
+        if setsHistory.count == maxSets {
+            self.setsHistory.removeAll()
+        }
+
+        updateNewGameUI()
+    }
+
+    private func updateNewGameUI() {
         self.awayScore = 0
         self.homeScore = 0
-        self.currentSet = 1
-        self.homeSets = 0
-        self.awaySets = 0
+
+        updateSets()
+
+//        TODO: prověřit že se chová podle pravidel, servera tady nemusím nastavovat
+        updateServer()
+
         self.scoreHistory = []
-        self.currentServer = players[0]
+        self.scores.deleteAll()
 
         self.homeScoreLbl.text = getScore(team: homeScore)
         self.awayScoreLbl.text = getScore(team: awayScore)
@@ -115,58 +286,131 @@ class GameViewController: UIViewController {
         self.setsConfiguartionLbl.text = getSettingsLabel()
         serveIndicatorView.center.y = settingsView.center.y
         self.serveIndicatorView.isHidden = true
+        clearAllReceiversBackground()
     }
 
-    private func calculateServe() {
-        if scoreHistory.isEmpty {
-            currentServer = players[0]
-        } else if scoreHistory.count == 1 {
-            currentServer = homeScore > awayScore ? players[1] : players[2]
-        } else {
-            let previousScore = scoreHistory[scoreHistory.count - 1]
-            let currentScore = scoreHistory.last
-            let previousHomeScore = previousScore.home
-            let previousAwayScore = previousScore.away
+    private func updateServer() {
 
-            guard let currentHomeScore = currentScore?.home else { return }
-            guard let currentAwayScore = currentScore?.away else { return }
+//        TODO: přepsat aby zahajoval set druhý tým
+        if currentServer != players[0] {
+            self.currentServer = currentServer.team == .away ? players[1] : players[2]
+        }
+    }
 
-            //        if scoreHistory.isEmpty {
-            //            serveIndicatorView.center.y = settingsView.center.y
-            //            serveIndicatorView.isHidden = true
-            //        } else if scoreHistory.count == 1 {
-            //            currentServer = currentHomeScore > currentAwayScore ? players[1] : players[2]
-            //            serveIndicatorView.isHidden = false
-            //            print("Starts Serving \(String(describing: currentServer?.id))")
+    private func updateSets() {
+        self.homeSets = 0
+        self.awaySets = 0
 
-            if currentHomeScore > previousHomeScore && currentServer.team == .away {
-                nextServer()
-                print("Serve changed to \(String(describing: currentServer.id))")
-
-            } else if currentAwayScore > previousAwayScore && currentServer.team == .home {
-                nextServer()
-                print("Serve changed to \(String(describing: currentServer.id))")
-
+        setsHistory.forEach { score in
+            if score.home > score.away {
+                homeSets += 1
             } else {
-                print("Serve stays with player \(String(describing: currentServer.id))")
+                awaySets += 1
             }
         }
     }
 
+    private func calculateServe() {
+        guard let previousScore = scores.tail?.value else {
+            currentServer = players[0]
+            currentReceiver = players[0]
+            clearAllReceiversBackground()
+            return
+        }
+
+        let previousHomeScore = previousScore.home
+        let previousAwayScore = previousScore.away
+
+        if homeScore > previousHomeScore && currentServer.team == .away {
+            nextServer()
+            setCurrentReceiver()
+            print("Serve changed to \(String(describing: currentServer.id))")
+
+        } else if awayScore > previousAwayScore && currentServer.team == .home {
+            nextServer()
+            setCurrentReceiver()
+            print("Serve changed to \(String(describing: currentServer.id))")
+
+        } else {
+            rotateServers()
+            setCurrentReceiver()
+
+            print("Serve stays with player \(String(describing: currentServer.id))")
+        }
+    }
+
+    private func previousServe() {
+//        guard !scoreHistory.isEmpty else { return }
+//        guard !scores.isEmpty else { return }
+//        let previousScore = scoreHistory[scoreHistory.count - 1]
+
+        guard let previousScore = scores.tail?.value else { return }
+            let previousHomeScore = previousScore.home
+            let previousAwayScore = previousScore.away
+
+            if homeScore > previousHomeScore && currentServer.team == .away {
+//                nextServer()
+//                getReceiver()
+                print("Serve changed to \(String(describing: currentServer.id))")
+
+            } else if awayScore > previousAwayScore && currentServer.team == .home {
+//                nextServer()
+//                getReceiver()
+//                print("Serve changed to \(String(describing: currentServer.id))")
+
+            } else {
+//                switchTeamReceiver()
+                rotateServers()
+                print("Serve stays with player \(String(describing: currentServer.id))")
+            }
+
+    }
+
     private func nextServer() {
-        let currentServer = self.currentServer.id
-        let nextId = currentServer + 1
-        let nextServer = currentServer == players.count ? players[1] : players[nextId]
+        let currentServerId = self.currentServer.id
+        let nextId = currentServerId + 1
+        let nextServer = nextId == players.count ? players[1] : players[nextId]
         self.currentServer = nextServer
+    }
+
+    private func previousServer() {
+//        let lastScore = scoreHistory.last
+        let lastScore = scores.tail
+
+        if let lastServer = lastScore?.value.currentReceiver, let lastReceiver = lastScore?.value.currentReceiver {
+            self.currentServer = lastServer
+            self.currentReceiver = lastReceiver
+        } else {
+            self.currentServer = players[0]
+            self.currentReceiver = players[0]
+        }
+
+        setPlayerBackgrounds()
     }
 
     private func claculateWinner() {
         if homeScore > (maxScore - 1), homeScore > (awayScore + 1) {
+            saveFinalScore()
             wins(team: .home)
         } else if awayScore > (maxScore - 1), awayScore > (homeScore + 1) {
+            saveFinalScore()
             wins(team: .away)
-            print("away wins")
         }
+    }
+
+    private func isFinalGame() -> Bool {
+        if maxSets == 1,
+            homeSets > awaySets + 1 && homeSets > maxSets / 2,
+            awaySets > homeSets + 1 && awaySets > maxSets / 2 {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    private func saveFinalScore() {
+        let finalScore = Point(home: homeScore, away: awayScore, scoringPlayer: currentServer, currentReceiver: currentReceiver)
+        setsHistory.append(finalScore)
     }
 
 //    private func setStartingServePosition() {
@@ -186,7 +430,7 @@ class GameViewController: UIViewController {
 //    }
 
     private func getSettingsLabel() -> String {
-        let label = maxSets == 1 ? "First to \(maxScore) points win" : "Set \(currentSet) of \(maxSets) | \(maxScore) points win"
+        let label = maxSets == 1 ? "First to \(maxScore) points win" : "Set \(setsHistory.count) of \(maxSets) | \(maxScore) points win"
         return label
     }
 
@@ -198,41 +442,27 @@ class GameViewController: UIViewController {
             fatalError("Failed to load ResultViewController from storyboard.")
         }
 
-//        vc.modalPresentationStyle = .overCurrentContext
-//        present(vc, animated: true, completion: nil)
-
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: false)
     }
 
     func getResultViewModel() -> ResultViewModel {
-        return ResultViewModel(server: currentServer, scores: scoreHistory)
+        let finalSet = isFinalGame()
+
+        let viewModel = ResultViewModel(server: currentServer, sets: setsHistory, final: finalSet)
+        return viewModel
     }
 
     private func saveScoreToHistory() {
-        if homeScore == 0 && awayScore == 0 {
-            scoreHistory.append(Score(home: 0, away: 0, scoringPlayer: players[0]))
-        } else {
-            let currentScore = Score(home: homeScore, away: awayScore, scoringPlayer: currentServer)
-            scoreHistory.append(currentScore)
-        }
-        print("Last score saved \(String(describing: scoreHistory.last))")
-    }
-
-    private func removeServe() {
-//        if serveHistory.count > 1 {
-//            serveHistory.removeLast()
-//        }
-        if !scoreHistory.isEmpty {
-            scoreHistory.removeLast()
-        }
-        calculateServe()
+        let currentScore = Point(home: homeScore, away: awayScore, scoringPlayer: currentServer, currentReceiver: currentReceiver)
+        scores.append(currentScore)
     }
 
     //    MARK: Scoring Actions
     @IBAction func homeDidScore(_ sender: UIButton) {
-        if self.scoreHistory.isEmpty {
+        if scores.tail == nil {
             currentServer = players[1]
-            serveIndicatorView.isHidden = false
+//            serveIndicatorView.isHidden = false
+            currentReceiver = players[4]
         } else {
             homeScore += 1
             homeScoreLbl.text = getScore(team: homeScore)
@@ -240,13 +470,15 @@ class GameViewController: UIViewController {
             claculateWinner()
             print("Scored mr: \(String(describing: currentServer.id))")
         }
+        setPlayerBackgrounds()
         saveScoreToHistory()
     }
 
     @IBAction func awayDidScore(_ sender: UIButton) {
-        if self.scoreHistory.isEmpty {
+        if scores.tail == nil {
             currentServer = players[2]
-            serveIndicatorView.isHidden = false
+            currentReceiver = players[3]
+//            serveIndicatorView.isHidden = false
         } else {
             awayScore += 1
             awayScoreLbl.text = getScore(team: awayScore)
@@ -254,25 +486,33 @@ class GameViewController: UIViewController {
             claculateWinner()
             print("Scored mr: \(String(describing: currentServer.id))")
         }
+        setPlayerBackgrounds()
         saveScoreToHistory()
     }
 
     @IBAction func homeDidRemove(_ sender: UIButton) {
-        guard homeScore > 0 else { return }
+        previousServe()
+//        guard scores.tail != nil else { return }
+        scores.deleteLast()
+        if scores.tail == nil {
+            self.currentServer = players[0]
+            self.currentReceiver = players[0]
+        } else {
+            guard let lastScore = scores.tail?.value else { return }
+            homeScore = lastScore.home
+            awayScore = lastScore.away
+            homeScoreLbl.text = getScore(team: homeScore)
+            awayScoreLbl.text = getScore(team: awayScore)
+            currentServer = lastScore.scoringPlayer ?? players[0]
+            currentReceiver = lastScore.currentReceiver ?? players[0]
+        }
+//        TODO: fix rotating users when remove the score
 
-        homeScore -= 1
-        homeScoreLbl.text = getScore(team: homeScore)
-        removeServe()
-        calculateServe()
+        setPlayerBackgrounds()
     }
 
     @IBAction func awayDidRemove(_ sender: UIButton) {
-        guard awayScore > 0 else { return }
 
-        awayScore -= 1
-        awayScoreLbl.text = getScore(team: awayScore)
-        removeServe()
-        calculateServe()
     }
 
     @IBAction func didPressRestart(_ sender: UIBarButtonItem) {
@@ -291,7 +531,7 @@ extension GameViewController {
     }
 
     func getSetsLabel(team: Int) -> String {
-        let label = maxSets == 1 ? "" : "Wins: \(team)"
+        let label = maxSets == 1 ? "" : "Sets: \(team)"
         return label
     }
 }

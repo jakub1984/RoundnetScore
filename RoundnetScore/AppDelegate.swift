@@ -11,33 +11,18 @@ import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var window: UIWindow?
 
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-
-        window = UIWindow(frame: UIScreen.main.bounds)
-
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let viewController = storyboard.instantiateViewController(identifier: "GameViewController", creator: { coder in
-            let settingsViewModel = SettingsViewModel()
-            let gameViewModel = GameViewModel(settings: settingsViewModel)
-            let gameViewController = GameViewController(coder: coder, viewModel: gameViewModel)
-            return gameViewController
-        })
-
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let viewController = storyboard.instantiateViewController(withIdentifier: "GameViewController") as? GameViewController else {
+            return false
+        }
         let navigationController = UINavigationController(rootViewController: viewController)
-        window!.rootViewController = navigationController
-        window!.makeKeyAndVisible()
-
-//        let settingsViewModel = SettingsViewModel()
-//        let gameViewModel = GameViewModel(settings: settingsViewModel)
-//
-//        if let firstViewController = window?.rootViewController as? UINavigationController,
-//            let gameViewController = firstViewController.topViewController as? GameViewController {
-//            gameViewController.viewModel = gameViewModel
-//        }
+        self.window?.rootViewController = navigationController
+        self.window?.makeKeyAndVisible()
         return true
     }
 
