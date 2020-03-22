@@ -19,9 +19,9 @@ class SettingsViewModel {
         self.players = [
             Player(position: .NO),
             Player(position: .A),
-            Player(position: .A),
             Player(position: .B),
-            Player(position: .B)
+            Player(position: .C),
+            Player(position: .D)
         ]
         self.numberOfPlayers = players.count - 1
         self.maxPoints = 15
@@ -32,7 +32,7 @@ class SettingsViewModel {
             self.players = [
             Player(position: .NO),
             Player(position: .A),
-            Player(position: .A)
+            Player(position: .B)
             ]
         } else {
             self.players = [

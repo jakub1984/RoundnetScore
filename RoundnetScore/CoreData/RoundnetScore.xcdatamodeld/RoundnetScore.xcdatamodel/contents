@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19D76" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="GameCoreData" representedClassName=".GameCoreData" syncable="YES">
+        <attribute name="maxPoints" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="numberOfPlayers" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="PlayerCoreData" representedClassName=".PlayerCoreData" syncable="YES">
+        <attribute name="name" attributeType="String"/>
+    </entity>
+    <elements>
+        <element name="GameCoreData" positionX="-54" positionY="0" width="128" height="73"/>
+        <element name="PlayerCoreData" positionX="-36" positionY="36" width="128" height="58"/>
+    </elements>
+</model>
