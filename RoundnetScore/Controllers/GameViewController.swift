@@ -43,7 +43,7 @@ class GameViewController: UIViewController {
 //    let destinationAwayA: CGPoint
 //    let destinationAwayB: CGPoint
 
-    var viewModel = GameViewModel()
+    let viewModel: Int
 
     private var homeScore: Int = 0
     private var homeSets: Int = 0
@@ -67,7 +67,6 @@ class GameViewController: UIViewController {
 // TODO: remove hardCap
     var hardCap: Int? = nil
 
-
 //    convenience init() {
 //        self.init()
 //
@@ -86,23 +85,24 @@ class GameViewController: UIViewController {
 //        fatalError("init(coder:) is not supported")
 //    }
 
-    init() {
+    init?(coder: NSCoder, viewModel: Int) {
 //        self.destinationHomeA = positionAView.convert(positionAView.center, to: positionAView)
 //        self.destinationHomeB = positionCView.convert(positionCView.center, to: positionCView)
 //        self.destinationAwayA = positionBView.convert(positionBView.center, to: positionBView)
 //        self.destinationAwayB = positionDView.convert(positionDView.center, to: positionDView)
-
-        super.init(nibName: nil, bundle: nil)
+        self.viewModel = viewModel
+        super.init(coder: coder)
     }
 
     required init?(coder: NSCoder) {
-
+        self.viewModel = 3
         super.init(coder: coder)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         newGame()
+        print("ViewModel: \(self.viewModel)")
     }
 
     override func viewWillAppear(_ animated: Bool) {
