@@ -105,7 +105,7 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         newGame()
-        print("ViewModel: \(self.viewModel)")
+        print("ViewModel: \(String(describing: self.viewModel))")
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -271,6 +271,8 @@ class GameViewController: UIViewController {
     }
 
     private func updateNewGameUI() {
+        let savedPlayers = persistenceManager.fetch(PlayerCoreData.self)
+
         self.awayScore = 0
         self.homeScore = 0
 
