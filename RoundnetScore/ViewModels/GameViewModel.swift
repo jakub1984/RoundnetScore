@@ -14,11 +14,11 @@ class GameViewModel {
     var maxPoints: Int = 15
     var currentServer: Player
 
-    init(settings: SettingsViewModel) {
+    init(settings: GameSetupModel) {
         self.numberOfSets = settings.numberOfSets
         self.players = settings.players
+        self.currentServer = settings.players.first!
         self.maxPoints = settings.maxPoints
-        self.currentServer = players[0]
     }
 
 }

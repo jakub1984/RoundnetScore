@@ -30,20 +30,13 @@ class GameViewController: UIViewController {
     static let white = UIColor(red: 241, green: 247, blue: 238, alpha: 1)
     static let yellow = UIColor(red: 250, green: 222, blue: 50, alpha: 1)
 
-    private var players: [Player] = [
-        Player(position: .NO),
-        Player(position: .A),
-        Player(position: .B),
-        Player(position: .C),
-        Player(position: .D)
-    ]
+    private var players: [Player] = []
+    var destinationHomeA: CGPoint = CGPoint(x: 0, y: 0)
+    var destinationHomeB: CGPoint = CGPoint(x: 0, y: 0)
+    var destinationAwayA: CGPoint = CGPoint(x: 0, y: 0)
+    var destinationAwayB: CGPoint = CGPoint(x: 0, y: 0)
 
-//    let destinationHomeA: CGPoint
-//    let destinationHomeB: CGPoint
-//    let destinationAwayA: CGPoint
-//    let destinationAwayB: CGPoint
-
-    let viewModel: Int!
+    let viewModel: GameSetupModel!
     let persistenceManager: PersistenceManager!
 
     private var homeScore: Int = 0
@@ -53,20 +46,19 @@ class GameViewController: UIViewController {
     private var awaySets: Int = 0
 
     private var setsHistory: [Point] = []
-    private var scoreHistory: [Point] = []
+//    private var scoreHistory: [Point] = []
     private var scores = ScoresDoublyLinkedList()
 
-    private var currentServer: Player = Player(position: .NO)
-    private var currentReceiver: Player = Player(position: .NO)
+    private var currentServer: Player!
+    private var currentReceiver: Player!
 
     private var isHomeSwitched: Bool = false
     private var isAwaySwitched: Bool = false
+    private var lastStartingServer: Player!
 
     var maxScore: Int = 15
     var maxSets: Int = 3
     var startingTeam: Team = .noTeam
-// TODO: remove hardCap
-    var hardCap: Int? = nil
 
 //    convenience init() {
 //        self.init()
@@ -86,24 +78,31 @@ class GameViewController: UIViewController {
 //        fatalError("init(coder:) is not supported")
 //    }
 
-    init?(coder: NSCoder, viewModel: Int, persistenceManager: PersistenceManager) {
-//        self.destinationHomeA = positionAView.convert(positionAView.center, to: positionAView)
-//        self.destinationHomeB = positionCView.convert(positionCView.center, to: positionCView)
-//        self.destinationAwayA = positionBView.convert(positionBView.center, to: positionBView)
-//        self.destinationAwayB = positionDView.convert(positionDView.center, to: positionDView)
+    init?(coder: NSCoder, viewModel: GameSetupModel, persistenceManager: PersistenceManager) {
         self.viewModel = viewModel
         self.persistenceManager = persistenceManager
+        self.players = viewModel.players
+        self.currentServer = players[0]
+        self.currentReceiver = players[0]
+        self.lastStartingServer = players[0]
+        self.maxScore = viewModel.maxPoints
+        self.maxSets = viewModel.numberOfSets
         super.init(coder: coder)
     }
 
     required init?(coder: NSCoder) {
-        self.viewModel = 3
+        self.viewModel = nil
         self.persistenceManager = nil
         super.init(coder: coder)
+
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.destinationHomeA = positionAView.convert(positionAView.center, to: positionAView)
+        self.destinationHomeB = positionCView.convert(positionCView.center, to: positionCView)
+        self.destinationAwayA = positionBView.convert(positionBView.center, to: positionBView)
+        self.destinationAwayB = positionDView.convert(positionDView.center, to: positionDView)
         newGame()
         print("ViewModel: \(String(describing: self.viewModel))")
     }
@@ -209,16 +208,20 @@ class GameViewController: UIViewController {
         switchServerPositions()
     }
 
-//    private func resetPlayersPosition() {
-//        if isHomeSwitched {
-//            positionAView.move(to: destinationHomeB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
-//            positionCView.move(to: destinationHomeA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
-//        } else {
-//            positionAView.move(to: destinationHomeB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
-//            positionCView.move(to: destinationHomeA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
-//
-//        }
-//    }
+    private func resetPlayersPositions() {
+        if isHomeSwitched {
+            positionAView.move(to: self.destinationHomeA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+            positionCView.move(to: self.destinationHomeB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+        }
+
+        if isAwaySwitched {
+            positionBView.move(to: self.destinationAwayA.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+            positionDView.move(to: self.destinationAwayB.applying(CGAffineTransform(translationX: 0, y: 0)), duration: 0.5, options: .curveEaseInOut)
+        }
+        isHomeSwitched = false
+        isAwaySwitched = false
+        switchServerPositions()
+    }
 
     private func switchServerPositions() {
         print("currentServer \(currentServer)")
@@ -278,10 +281,11 @@ class GameViewController: UIViewController {
 
         updateSets()
 
-//        TODO: prověřit že se chová podle pravidel, servera tady nemusím nastavovat
         updateServer()
+        resetPlayersPositions()
+        clearAllReceiversBackground()
 
-        self.scoreHistory = []
+
         self.scores.deleteAll()
 
         self.homeScoreLbl.text = getScore(team: homeScore)
@@ -291,15 +295,15 @@ class GameViewController: UIViewController {
         self.setsConfiguartionLbl.text = getSettingsLabel()
         serveIndicatorView.center.y = settingsView.center.y
         self.serveIndicatorView.isHidden = true
-        clearAllReceiversBackground()
     }
 
     private func updateServer() {
-
 //        TODO: přepsat aby zahajoval set druhý tým
-        if currentServer != players[0] {
-            self.currentServer = currentServer.team == .away ? players[1] : players[2]
-        }
+        self.currentServer = players[0]
+
+//        if currentServer != players[0] {
+//            self.currentServer = currentServer.team == .away ? players[1] : players[2]
+//        }
     }
 
     private func updateSets() {

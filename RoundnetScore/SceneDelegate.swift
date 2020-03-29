@@ -19,9 +19,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
 
-                let settingsViewModel = SettingsViewModel()
-                let gameViewModel = GameViewModel(settings: settingsViewModel)
-
         //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         //        storyboard.instantiateInitialViewController { (coder) -> UIViewController? in
         //            return GameViewController(
@@ -41,8 +38,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
                 let viewController = storyboard.instantiateViewController(identifier: "GameViewController", creator: { coder in
         //            let settingsViewModel = SettingsViewModel()
-                    let gameViewModel = 1
-                    let gameViewController = GameViewController(coder: coder, viewModel: gameViewModel, persistenceManager: PersistenceManager.shared)
+                    let gameSetup = GameSetupModel()
+                    let gameViewController = GameViewController(coder: coder, viewModel: gameSetup, persistenceManager: PersistenceManager.shared)
                     return gameViewController
                 })
         let navigationController = UINavigationController(rootViewController: viewController)
