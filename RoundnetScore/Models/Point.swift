@@ -11,14 +11,14 @@ import Foundation
 public struct Point: Equatable {
     let home: Int
     let away: Int
-    let scoringPlayer: Player?
-    let currentReceiver: Player?
+    let server: Player?
+    let receiver: Player?
 
-    init(home: Int, away: Int, scoringPlayer: Player? = nil, currentReceiver: Player? = nil) {
+    init(home: Int, away: Int, currentServer: Player? = nil, currentReceiver: Player? = nil) {
         self.home = home
         self.away = away
-        self.scoringPlayer = scoringPlayer
-        self.currentReceiver = currentReceiver
+        self.server = currentServer
+        self.receiver = currentReceiver
     }
 
     public static func == (lhs: Point, rhs: Point) -> Bool {

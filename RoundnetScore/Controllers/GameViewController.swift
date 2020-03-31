@@ -112,7 +112,7 @@ class GameViewController: UIViewController {
     }
 
     private func newGame() {
-        updateNewGameUI()
+        setNewGameUI()
         scores.deleteAll()
     }
 
@@ -270,10 +270,10 @@ class GameViewController: UIViewController {
             self.setsHistory.removeAll()
         }
 
-        updateNewGameUI()
+        setNewGameUI()
     }
 
-    private func updateNewGameUI() {
+    private func setNewGameUI() {
         let savedPlayers = persistenceManager.fetch(PlayerCoreData.self)
 
         self.awayScore = 0
@@ -281,10 +281,10 @@ class GameViewController: UIViewController {
 
         updateSets()
 
-        updateServer()
+        setStartingServer()
+        setStartingReceiver()
         resetPlayersPositions()
         clearAllReceiversBackground()
-
 
         self.scores.deleteAll()
 
@@ -297,13 +297,17 @@ class GameViewController: UIViewController {
         self.serveIndicatorView.isHidden = true
     }
 
-    private func updateServer() {
+    private func setStartingServer() {
 //        TODO: přepsat aby zahajoval set druhý tým
         self.currentServer = players[0]
 
 //        if currentServer != players[0] {
 //            self.currentServer = currentServer.team == .away ? players[1] : players[2]
 //        }
+    }
+
+    private func setStartingReceiver() {
+        self.currentReceiver = players[0]
     }
 
     private func updateSets() {
@@ -349,30 +353,18 @@ class GameViewController: UIViewController {
     }
 
     private func previousServe() {
-//        guard !scoreHistory.isEmpty else { return }
-//        guard !scores.isEmpty else { return }
-//        let previousScore = scoreHistory[scoreHistory.count - 1]
-
         guard let previousScore = scores.tail?.value else { return }
-            let previousHomeScore = previousScore.home
-            let previousAwayScore = previousScore.away
+        guard let previousServerTeam = previousScore.server?.team else { return }
+        let previousHomeScore = previousScore.home
+        let previousAwayScore = previousScore.away
 
-            if homeScore > previousHomeScore && currentServer.team == .away {
-//                nextServer()
-//                getReceiver()
-                print("Serve changed to \(String(describing: currentServer.id))")
-
-            } else if awayScore > previousAwayScore && currentServer.team == .home {
-//                nextServer()
-//                getReceiver()
-//                print("Serve changed to \(String(describing: currentServer.id))")
-
-            } else {
-//                switchTeamReceiver()
-                rotateServers()
-                print("Serve stays with player \(String(describing: currentServer.id))")
-            }
-
+        if homeScore > previousHomeScore && previousServerTeam == .away {
+            switchServerPositions()
+        } else if awayScore > previousAwayScore && previousServerTeam == .home {
+            switchServerPositions()
+        } else {
+            rotateServers()
+        }
     }
 
     private func nextServer() {
@@ -386,7 +378,7 @@ class GameViewController: UIViewController {
 //        let lastScore = scoreHistory.last
         let lastScore = scores.tail
 
-        if let lastServer = lastScore?.value.currentReceiver, let lastReceiver = lastScore?.value.currentReceiver {
+        if let lastServer = lastScore?.value.receiver, let lastReceiver = lastScore?.value.receiver {
             self.currentServer = lastServer
             self.currentReceiver = lastReceiver
         } else {
@@ -418,7 +410,7 @@ class GameViewController: UIViewController {
     }
 
     private func saveFinalScore() {
-        let finalScore = Point(home: homeScore, away: awayScore, scoringPlayer: currentServer, currentReceiver: currentReceiver)
+        let finalScore = Point(home: homeScore, away: awayScore, currentServer: currentServer, currentReceiver: currentReceiver)
         setsHistory.append(finalScore)
     }
 
@@ -462,7 +454,7 @@ class GameViewController: UIViewController {
     }
 
     private func saveScoreToHistory() {
-        let currentScore = Point(home: homeScore, away: awayScore, scoringPlayer: currentServer, currentReceiver: currentReceiver)
+        let currentScore = Point(home: homeScore, away: awayScore, currentServer: currentServer, currentReceiver: currentReceiver)
         scores.append(currentScore)
     }
 
@@ -500,20 +492,20 @@ class GameViewController: UIViewController {
     }
 
     @IBAction func homeDidRemove(_ sender: UIButton) {
-        previousServe()
 //        guard scores.tail != nil else { return }
         scores.deleteLast()
+        previousServe()
+
         if scores.tail == nil {
-            self.currentServer = players[0]
-            self.currentReceiver = players[0]
+            setNewGameUI()
         } else {
             guard let lastScore = scores.tail?.value else { return }
             homeScore = lastScore.home
             awayScore = lastScore.away
             homeScoreLbl.text = getScore(team: homeScore)
             awayScoreLbl.text = getScore(team: awayScore)
-            currentServer = lastScore.scoringPlayer ?? players[0]
-            currentReceiver = lastScore.currentReceiver ?? players[0]
+            currentServer = lastScore.server ?? players[0]
+            currentReceiver = lastScore.receiver ?? players[0]
         }
 //        TODO: fix rotating users when remove the score
 
