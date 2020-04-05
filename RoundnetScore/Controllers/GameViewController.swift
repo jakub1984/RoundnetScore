@@ -112,8 +112,8 @@ class GameViewController: UIViewController {
     }
 
     private func newGame() {
-        setNewGameUI()
-        scores.deleteAll()
+        setsHistory.removeAll()
+        newGameSetup()
     }
 
     private func setPlayerBackgrounds() {
@@ -258,52 +258,52 @@ class GameViewController: UIViewController {
     }
 
     private func clearAllReceiversBackground() {
-        positionAView.backgroundColor = .white
-        positionCView.backgroundColor = .white
-        positionBView.backgroundColor = .white
-        positionDView.backgroundColor = .white
+        viewPosition1.backgroundColor = .white
+        viewPosition3.backgroundColor = .white
+        viewPosition3.backgroundColor = .white
+        viewPosition4.backgroundColor = .white
     }
 
     private func nextSet() {
+//        přidat observer aby se volalo při kliknutí na New game na result stránce
         guard !setsHistory.isEmpty else { return }
         if setsHistory.count == maxSets {
             self.setsHistory.removeAll()
         }
 
-        setNewGameUI()
+        newGameSetup()
     }
 
-    private func setNewGameUI() {
+    private func newGameSetup() {
         let savedPlayers = persistenceManager.fetch(PlayerCoreData.self)
 
-        self.awayScore = 0
-        self.homeScore = 0
-
         updateSets()
+        homeScore = 0
+        awayScore = 0
 
-        setStartingServer()
-        setStartingReceiver()
         resetPlayersPositions()
-        clearAllReceiversBackground()
+        setStartingServer()
+        setCurrentReceiver()
+        setPlayerBackgrounds()
+        scores.deleteAll()
 
-        self.scores.deleteAll()
-
-        self.homeScoreLbl.text = getScore(team: homeScore)
-        self.awayScoreLbl.text = getScore(team: awayScore)
-        self.homeSetsLbl.text = getSetsLabel(team: homeSets)
-        self.awaySetsLbl.text = getSetsLabel(team: awaySets)
-        self.setsConfiguartionLbl.text = getSettingsLabel()
+        homeScoreLbl.text = getScore(team: homeScore)
+        awayScoreLbl.text = getScore(team: awayScore)
+        homeSetsLbl.text = getSetsLabel(team: homeSets)
+        awaySetsLbl.text = getSetsLabel(team: awaySets)
+        setsConfiguartionLbl.text = getSettingsLabel()
         serveIndicatorView.center.y = settingsView.center.y
-        self.serveIndicatorView.isHidden = true
+        serveIndicatorView.isHidden = true
     }
 
     private func setStartingServer() {
-//        TODO: přepsat aby zahajoval set druhý tým
-        self.currentServer = players[0]
+        guard !setsHistory.isEmpty else {
+            self.currentServer = players[0]
+            self.currentReceiver = players[0]
+            return
+        }
 
-//        if currentServer != players[0] {
-//            self.currentServer = currentServer.team == .away ? players[1] : players[2]
-//        }
+        nextStartingServer()
     }
 
     private func setStartingReceiver() {
@@ -370,6 +370,13 @@ class GameViewController: UIViewController {
     private func nextServer() {
         let currentServerId = self.currentServer.id
         let nextId = currentServerId + 1
+        let nextServer = nextId == players.count ? players[1] : players[nextId]
+        self.currentServer = nextServer
+    }
+
+    private func nextStartingServer() {
+        let previousServerId = self.lastStartingServer.id
+        let nextId = previousServerId + 1
         let nextServer = nextId == players.count ? players[1] : players[nextId]
         self.currentServer = nextServer
     }
@@ -497,7 +504,7 @@ class GameViewController: UIViewController {
         previousServe()
 
         if scores.tail == nil {
-            setNewGameUI()
+            newGameSetup()
         } else {
             guard let lastScore = scores.tail?.value else { return }
             homeScore = lastScore.home

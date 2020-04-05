@@ -28,6 +28,16 @@ enum Position: CaseIterable {
     case C
     case D
     case NO
+    
+    var positionId: Int {
+        switch self {
+        case .A: return 1
+        case .B: return 2
+        case .C: return 3
+        case .D: return 4
+        case .NO: return 0
+        }
+    }
 }
 
 public struct Player: Equatable {
